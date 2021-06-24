@@ -1,0 +1,52 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
+li {
+  list-style: none;
+}
+
+.boardGrid {
+  margin: 10px;
+  height: inherit;
+  /* width: 70%; */
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  border: 1px solid black;
+}
+
+.square {
+  /* height: 105px;
+  width: 105px; */
+}
+
+.dark {
+  background-color: #504538;
+}
+
+.white {
+  background-color: #fff7e7;
+}
+
+.numbers {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+.letters {
+  display: flex;
+  justify-content: space-evenly;
+  text-align: center;
+}
