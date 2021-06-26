@@ -34,7 +34,7 @@ var chessPieces = {
 var drawBoard = function(){
   for (let y = 0; y < 8; y++) {
     for (let x = 0; x < 8; x++) {
-      
+    
     const square = document.createElement("div");
     const Piece = document.createElement("img");
     square.classList.add(letters[y] + numbers[x]);
@@ -44,36 +44,51 @@ var drawBoard = function(){
     square.classList.add("square");
     
     square.addEventListener("dragover", dragOver);
+    square.addEventListener("dragleave", dragLeave);
+    square.addEventListener("drop", onDrop);
     
     boardInfo(square);
     square.appendChild(Piece);
     board.appendChild(square);
-
     }
   }
 }
 
 document .addEventListener("dragstart", dragStart);
 document.addEventListener("dragend", dragEnd)
+var dragged;
 
 function dragStart(event) {
-  if (event.target.classList == "square") {
-    event.dataTransfer.setData("Text", event.target.id);
-  }
-  else return false;
+    event.dataTransfer.setData("text/plain", event.target.id); 
+    dragged = event.target;
+    event.target.classList.remove("placed");
 };
 
 function dragEnd(event) {
   event.dataTransfer.dropEffect = "move";
 };
 
-function dragOver(event) {  
-  event.preventDefault();
-  event.target.style.border = "3px dotted red";
-  event.dataTransfer.dropEffect = "move";
+function dragOver(event) {
+  if (event.target.classList != "placed") {
+    event.target.classList.add("hover");
+    event.preventDefault();
+  }
 };
 
- 
+function dragLeave(event) {
+  if (event.target.classList != "placed") {
+    event.target.classList.remove("hover");
+  }
+}
+
+function onDrop(event) { 
+  event.preventDefault();
+  event.target.classList.remove("hover");
+  event.target.classList.add("placed");
+  
+  dragged.parentNode.removeChild( dragged );
+    event.target.appendChild( dragged );
+};
 
 var LetterNumber = function(){ 
   for (let i = 0; i < 8; i++) {

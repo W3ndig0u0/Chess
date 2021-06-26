@@ -29,3 +29,7 @@
 .placed:hover {
   cursor: grab;
 }
+
+.square.hover {
+  border: 2px solid black;
+}
