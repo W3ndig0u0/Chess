@@ -1,0 +1,31 @@
+.square {
+  width: 83.25px !important;
+  height: 83.25px !important;
+  position: relative;
+}
+
+.square:hover {
+  transition: 300ms;
+}
+
+.darkSquare {
+  background-color: #c3a082;
+}
+
+.whiteSquare {
+  background-color: #f2e1c3;
+}
+
+.placed {
+  /* width: 100%; */
+  /* height: auto; */
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+  cursor: grab;
+  padding: 12%;
+}
+
+.placed:hover {
+  cursor: grab;
+}

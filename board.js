@@ -8,30 +8,90 @@ let index = 0;
 let letterIndex = 0;
 let black = false;
 
-//Chess pieces
+const wikiLink = "https://upload.wikimedia.org/wikipedia/commons";
+
+//!Chess pieces
 var chessPieces = {
-  'white': {
-     'king': '&#9812;',
-     'queen': '&#9813;',
-     'rook': '&#9814;',
-     'bishop': '&#9815;',
-     'knight': '&#9816;',
-     'pawn': '&#9817;'
-  },
   'black': {
-     'king': '&#9818;',
-     'queen': '&#9819;',
-     'rook': '&#9820;',
-     'bishop': '&#9821;',
-     'knight': '&#9822;',
-     'pawn': '&#9823;'
+     'king': wikiLink + '/e/e3/Chess_kdt60.png',
+     'queen': wikiLink + '/a/af/Chess_qdt60.png',
+     'rook': wikiLink + '/a/a0/Chess_rdt60.png',
+     'bishop': wikiLink + '/8/81/Chess_bdt60.png',
+     'knight': wikiLink +  '/f/f1/Chess_ndt60.png',
+     'pawn': wikiLink + '/c/cd/Chess_pdt60.png'
+  },
+  'white': {
+     'king': wikiLink +  '/3/3b/Chess_klt60.png',
+     'queen': wikiLink +  '/4/49/Chess_qlt60.png',
+     'rook': wikiLink +  '/5/5c/Chess_rlt60.png',
+     'bishop': wikiLink +  '/9/9b/Chess_blt60.png',
+     'knight': wikiLink +  '/2/28/Chess_nlt60.png',
+     'pawn': wikiLink +  '/0/04/Chess_plt60.png'
   }
 };
 
 
+var drawBoard = function(){
+  for (let y = 0; y < 8; y++) {
+    for (let x = 0; x < 8; x++) {
+      
+    const square = document.createElement("div");
+    const Piece = document.createElement("img");
+    square.classList.add(letters[y] + numbers[x]);
+    
+    setNewBoard(Piece, x, y);
+    pieceCheck(Piece, "placed");
+    square.classList.add("square");
+    
+    square.addEventListener("dragover", dragOver);
+    
+    boardInfo(square);
+    square.appendChild(Piece);
+    board.appendChild(square);
+
+    }
+  }
+}
+
+document .addEventListener("dragstart", dragStart);
+document.addEventListener("dragend", dragEnd)
+
+function dragStart(event) {
+  if (event.target.classList == "square") {
+    event.dataTransfer.setData("Text", event.target.id);
+  }
+  else return false;
+};
+
+function dragEnd(event) {
+  event.dataTransfer.dropEffect = "move";
+};
+
+function dragOver(event) {  
+  event.preventDefault();
+  event.target.style.border = "3px dotted red";
+  event.dataTransfer.dropEffect = "move";
+};
+
+ 
+
+var LetterNumber = function(){ 
+  for (let i = 0; i < 8; i++) {
+    let letter = document.createElement("li");
+    letter.textContent = letters[i];
+    boardLetters.appendChild(letter);
+    
+    let number = document.createElement("li");
+    number.textContent = numbers[i]
+    boardNumbers.appendChild(number);
+  }
+}
+
 var setPiece = function(square, color, type) {
-  square.innerHTML = chessPieces[color][type];
+  square.src = chessPieces[color][type];
   square.classList.add("placed");
+  square.classList.add(color);
+  square.classList.add(type);
   board.appendChild(square);
 }
 
@@ -71,56 +131,45 @@ var setNewBoard = function(square, x, y) {
       setPiece(square, 'black', 'king');
     }
  }
-} 
+}
 
-for (let y = 0; y < 8; y++) {
-  for (let x = 0; x < 8; x++) {
-  
-  const square = document.createElement("div");
-  square.classList.add(letters[y] + numbers[x]);
-
-  setNewBoard(square, x, y);
-
-
+var boardInfo = function(square){
   if (index === 0) {
     square.classList.add("number");  
+  }
+  
+  else if (index === 8) {
+    black = !black
+    index = 0;
+    letterIndex++;
   }
   
   if (letterIndex === 7){
     square.classList.add("letter");  
   }
-
-  if (black) {
-    square.classList.add("square");  
-    square.classList.add("dark");
+  
+  if (black) { 
+    square.classList.add("darkSquare");
     index++;
     black = !black;
   }
 
   else{
-    square.classList.add("square");  
-    square.classList.add("white");  
+    square.classList.add("whiteSquare");  
     index++;
     black = !black;
   }
+}
 
-  board.appendChild(square);
-
-    if (index === 8) {
-      black = !black
-      index = 0;
-      letterIndex++;
-    }
+var pieceCheck = function (piece, checkClass) {
+  if (piece.classList.contains(checkClass))
+  {
+    piece.setAttribute('draggable', true);
+  }
+  else {
+    piece.setAttribute('draggable', false);
   }
 }
 
-
-for (let i = 0; i < 8; i++) {
-  let letter = document.createElement("li");
-  letter.textContent = letters[i];
-  boardLetters.appendChild(letter);
-
-  let number = document.createElement("li");
-  number.textContent = numbers[i]
-  boardNumbers.appendChild(number);
-}
+LetterNumber();
+drawBoard();
