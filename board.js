@@ -37,7 +37,7 @@ var drawBoard = function(){
     
     const square = document.createElement("div");
     const Piece = document.createElement("img");
-    square.classList.add(letters[y] + numbers[x]);
+    square.classList.add(letters[x] + numbers[y]);
     
     setNewBoard(Piece, x, y);
     pieceCheck(Piece, "placed");
@@ -57,10 +57,12 @@ var drawBoard = function(){
 }
 
 var dragged;
+var lastdragged;
 
 function dragStart(event) {
     event.dataTransfer.setData("text/plain", event.target.id); 
     dragged = event.target;
+    lastdragged = event.target.parentNode;
 };
 
 function dragEnd(event) {
@@ -87,12 +89,18 @@ function dragLeave(event) {
   }
 }
 
+
 function onDrop(event) { 
   event.preventDefault();
   event.target.classList.remove("hover");
   event.target.classList.add("placed");
+
+  // !Vad som drogs
   console.log(dragged);
+  // !Vart den drogs TILL
   console.log(event.target);
+  // !Vart den drogs FRÅN
+  console.log(lastdragged);
   
   // !Om den hamnar i samma eller inte
   if (dragged != event.target) {
@@ -180,7 +188,7 @@ var setNewBoard = function(square, x, y) {
 
 var boardInfo = function(square){
   if (index === 0) {
-    square.classList.add("number");  
+    square.classList.add("number");
   }
   
   else if (index === 8) {
