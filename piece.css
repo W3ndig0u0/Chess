@@ -17,10 +17,8 @@
 }
 
 .placed {
-  /* width: 100%; */
-  /* height: auto; */
-  display: block;
-  margin: 0 auto;
+  display: unset;
+  /* margin: 0 auto; */
   cursor: pointer;
   cursor: grab;
   padding: 12%;

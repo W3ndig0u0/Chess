@@ -46,6 +46,8 @@ var drawBoard = function(){
     square.addEventListener("dragover", dragOver);
     square.addEventListener("dragleave", dragLeave);
     square.addEventListener("drop", onDrop);
+    square .addEventListener("dragstart", dragStart);
+    square.addEventListener("dragend", dragEnd)
     
     boardInfo(square);
     square.appendChild(Piece);
@@ -54,24 +56,25 @@ var drawBoard = function(){
   }
 }
 
-document .addEventListener("dragstart", dragStart);
-document.addEventListener("dragend", dragEnd)
 var dragged;
 
 function dragStart(event) {
     event.dataTransfer.setData("text/plain", event.target.id); 
     dragged = event.target;
-    event.target.classList.remove("placed");
 };
 
 function dragEnd(event) {
-  event.dataTransfer.dropEffect = "move";
-};
+  event.target.parentNode.classList.remove("placed");
+}
 
+// !Musen över
 function dragOver(event) {
+  event.preventDefault();
   if (event.target.classList != "placed") {
     event.target.classList.add("hover");
-    event.preventDefault();
+  }  
+  else{
+    return false
   }
 };
 
@@ -79,16 +82,40 @@ function dragLeave(event) {
   if (event.target.classList != "placed") {
     event.target.classList.remove("hover");
   }
+  else{
+    return false
+  }
 }
 
 function onDrop(event) { 
   event.preventDefault();
   event.target.classList.remove("hover");
   event.target.classList.add("placed");
+  console.log(dragged);
+  console.log(event.target);
   
-  dragged.parentNode.removeChild( dragged );
-    event.target.appendChild( dragged );
-};
+  // !Om den hamnar i samma eller inte
+  if (dragged != event.target) {
+    event.target.appendChild(dragged);
+  }
+
+  else{
+    return false
+  }
+}
+
+
+
+var pieceCheck = function (piece, checkClass) {
+  if (piece.classList.contains(checkClass))
+  {
+    piece.setAttribute('draggable', true);
+  }
+  else {
+    piece.setAttribute('draggable', false);
+  }
+}
+
 
 var LetterNumber = function(){ 
   for (let i = 0; i < 8; i++) {
@@ -109,6 +136,8 @@ var setPiece = function(square, color, type) {
   square.classList.add(type);
   board.appendChild(square);
 }
+
+
 
 var setNewBoard = function(square, x, y) {
   if(y == 7) {
@@ -148,6 +177,7 @@ var setNewBoard = function(square, x, y) {
  }
 }
 
+
 var boardInfo = function(square){
   if (index === 0) {
     square.classList.add("number");  
@@ -173,16 +203,6 @@ var boardInfo = function(square){
     square.classList.add("whiteSquare");  
     index++;
     black = !black;
-  }
-}
-
-var pieceCheck = function (piece, checkClass) {
-  if (piece.classList.contains(checkClass))
-  {
-    piece.setAttribute('draggable', true);
-  }
-  else {
-    piece.setAttribute('draggable', false);
   }
 }
 
