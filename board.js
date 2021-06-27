@@ -216,3 +216,35 @@ var boardInfo = function(square){
 
 LetterNumber();
 drawBoard();
+
+fetch("./character.json", {})
+.then((response) => {
+    console.log(response);
+    return response.json();
+})
+
+.then((data) => {
+    console.log(data);
+    data.forEach((character) => {
+      let newDiv = document.createElement("div");
+
+      
+      let characterPhoto = new Image (150,250);
+      characterPhoto.src = character.photo;
+      newDiv.append(characterPhoto);
+   
+      let movieTitle = document.createElement("h2");
+
+      movieTitle.innerText = character.name;
+      newDiv.append(movieTitle);
+
+      let characterAlias = document.createElement("p");
+      characterAlias.innerText = "Alias: " + character.alias;
+      newDiv.append(characterAlias);
+
+      document.querySelector("#json").append(newDiv);
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+  });
