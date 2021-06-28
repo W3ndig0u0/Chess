@@ -203,6 +203,8 @@ var setPiece = function(square, color, type) {
   square.classList.add(color);
   square.classList.add(type);
   board.appendChild(square);
+
+  suggestNextMoves(getNextMoves(color, type));
 }
 
 
@@ -272,6 +274,129 @@ var boardInfo = function(square){
     black = !black;
   }
 }
+
+	//Returns possible moves of the selected piece
+	var getNextMoves = function(selectedPiece, selectedBox) {
+    var selectedPieceInfo = selectedPiece.split('-');
+    var color = selectedPieceInfo[0];
+    var type = selectedPieceInfo[1];
+
+    var id = selectedBox.split('-');
+    var i = parseInt(id[1]);
+    var j = parseInt(id[2]);
+
+    var nextMoves = [];
+
+    switch(type) {
+       case 'pawn':
+         if(color === 'black') {
+            var moves = [
+               [0, 1], [0, 2], [1, 1], [-1, 1]
+            ];
+         } else {
+            var moves = [
+               [0, -1], [0, -2], [1, -1], [-1, -1]
+            ];
+         }
+         nextMoves = getPawnMoves(i, j, color, moves);
+         break;
+       case 'rook':
+         var moves = [
+            [0, 1], [0, -1], [1, 0], [-1, 0]
+         ];
+         nextMoves = getQueenMoves(i, j, color, moves);
+         break;
+       case 'knight':
+         var moves = [
+            [-1, -2], [-2, -1], [1, -2], [-2, 1],
+            [2, -1], [-1, 2], [2, 1], [1, 2]
+         ];
+         nextMoves = getKnightMoves(i, j, color, moves);
+         break;
+       case 'bishop':
+         var moves = [
+            [1, 1], [1, -1], [-1, 1], [-1, -1]
+         ];
+         nextMoves = getQueenMoves(i, j, color, moves);
+         break;
+       case 'queen':
+         var moves1 = [
+            [1, 1], [1, -1], [-1, 1], [-1, -1]
+         ];
+         var moves2 = [
+            [0, 1], [0, -1], [1, 0], [-1, 0]
+         ];
+         nextMoves = getQueenMoves(i, j, color, moves1)
+                 .concat(getQueenMoves(i, j, color, moves2));
+         break;
+       case 'king':
+         var moves = [
+            [1, 1], [1, -1], [-1, 1], [-1, -1],
+            [0, 1], [0, -1], [1, 0], [-1, 0]
+         ];
+         nextMoves = getKnightMoves(i, j, color, moves);
+         break;
+       default: 
+         break;
+    }
+    return nextMoves;
+ }
+
+ //Calculate next move of rook, bishop and queen pieces
+ var getQueenMoves = function(i, j, color, moves) {
+    var nextMoves = [];
+    for(var move of moves) {
+       var tI = i + move[0];
+       var tJ = j + move[1];
+       var sugg = true;
+       while(sugg && !outOfBounds(tI, tJ)) {
+         var box = $('#box-' + tI + '-' + tJ);
+         if(box.hasClass('placed')) {
+            if(box.attr('piece').indexOf(color) >= 0) {
+               sugg = false;
+            } else {
+               nextMoves.push([tI, tJ]);
+               sugg = false;
+            }
+         }
+         if(sugg) {
+            nextMoves.push([tI, tJ]);
+            tI += move[0];
+            tJ += move[1];
+         }
+       }
+    }
+    return nextMoves;
+ }
+
+ //Calculate next moves for knight or king pieces
+ var getKnightMoves = function(i, j, color, moves) {
+    var nextMoves = [];
+    for(var move of moves) {
+       var tI = i + move[0];
+       var tJ = j + move[1];
+       if( !outOfBounds(tI, tJ) ) {
+         var box = $('#box-' + tI + '-' + tJ);
+         if(!box.hasClass('placed') || box.attr('piece').indexOf(color) < 0) {
+            nextMoves.push([tI, tJ]);
+         }
+       }
+    }
+    return nextMoves;
+ }
+
+ //Check if position i, j is in the board game
+ var outOfBounds = function(i, j) {
+    return ( i < 0 || i >= 8 || j < 0 || j >= 8 );
+ }
+
+ //Show possible moves by add suggestion to boxes
+ var suggestNextMoves = function(nextMoves) {
+    for(var move of nextMoves) {
+       var box =('#box-' + move[0] + '-' + move[1]);
+       box.classList.add('suggest');
+    }
+ }
 
 LetterNumber();
 drawBoard();
