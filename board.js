@@ -1,10 +1,11 @@
+var stats;
 const board = document.querySelector(".boardGrid");
 const boardLetters = document.querySelector(".letters");
 const boardNumbers = document.querySelector(".numbers");
 const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
-let index = 0;
+let i = 0;
 let letterIndex = 0;
 let black = false;
 
@@ -30,6 +31,20 @@ var chessPieces = {
   }
 };
 
+var mode = getStoredValue('someVarName');
+
+function Save(mode) {
+    mode = mode;
+    storeValue('someVarName', mode);
+}
+
+function storeValue(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function getStoredValue(key) {
+    return localStorage.getItem(key);
+}
 
 var drawBoard = function(){
   for (let y = 0; y < 8; y++) {
@@ -56,17 +71,34 @@ var drawBoard = function(){
   }
 }
 
-var dragged;
-var lastdragged;
+var dragged,lastdragged,prevPlace, newPlace, lastPiece;
 
 function dragStart(event) {
+  if(event.target.classList.contains("placed") && !event.target.classList.contains("sqyare") )
+  {
     event.dataTransfer.setData("text/plain", event.target.id); 
     dragged = event.target;
     lastdragged = event.target.parentNode;
-};
+    
+    if (prevPlace == null) {
+      prevPlace = lastdragged;
+    }
+    else return false;
+    
+    if (newPlace == null) {
+      newPlace = dragged;
+    }
+    else return false;
+    
+  }
+  else return false;
+}
 
 function dragEnd(event) {
-  event.target.parentNode.classList.remove("placed");
+  if (event.target.parentNode.classList.contains("square")) {
+    event.target.parentNode.classList.remove("placed");
+  }
+  else return false
 }
 
 // !Musen över
@@ -78,7 +110,7 @@ function dragOver(event) {
   else{
     return false
   }
-};
+}
 
 function dragLeave(event) {
   if (event.target.classList != "placed") {
@@ -89,29 +121,57 @@ function dragLeave(event) {
   }
 }
 
-
 function onDrop(event) { 
-  event.preventDefault();
   event.target.classList.remove("hover");
-  event.target.classList.add("placed");
 
-  // !Vad som drogs
-  console.log(dragged);
-  // !Vart den drogs TILL
-  console.log(event.target);
-  // !Vart den drogs FRÅN
-  console.log(lastdragged);
+  var statsArray = ["Dragged: " + dragged.outerHTML, "where Now: " + event.target.outerHTML, "lastDragged: " + lastdragged.outerHTML, "Dragged Classes: " + dragged.classList, "where Now Classes: " + event.target.classList, "lastDragged Classes: " + lastdragged.classList];
+  
+  // statsFullArray.push(statsArray);
+
+  // !Tills stats faktiskt funkar...
+  // Save(statsFullArray);
+
+  if (prevPlace != null && dragged != event.target) {
+    prevPlace.classList.remove("lastPlaced");
+    setTimeout(function(){ prevPlace = lastdragged; });
+  }
+  else return false;
+
+  // !bruh
+  if(event.target.classList.contains("newPlaced") && event.target.classList.contains("placed") && dragged != event.target )
+  {
+    event.target.classList.add("newPlaced");
+    console.log("1");
+  }  
+  
+  else if(event.target.classList.contains("placed") && !event.target.classList.contains("newPlaced") && dragged != event.target )
+  {
+    event.target.classList.add("newPlaced");
+    newPlace.classList.remove("newPlaced");
+    console.log("2");
+  }
+    
+  else if (newPlace != null && dragged != event.target) {;
+      event.target.classList.remove("newPlaced"); 
+      newPlace.classList.remove("newPlaced");
+      dragged.classList.add("newPlaced");
+      newPlace = dragged;
+      console.log("3");
+  }
+
+  else return false;
+
   
   // !Om den hamnar i samma eller inte
   if (dragged != event.target) {
+    event.target.classList.add("placed");
     event.target.appendChild(dragged);
+    lastdragged.classList.add("lastPlaced");
+    event.target.classList.add("placed");
   }
-
-  else{
-    return false
-  }
+  else return false;
+  console.log(statsArray);
 }
-
 
 
 var pieceCheck = function (piece, checkClass) {
@@ -146,7 +206,7 @@ var setPiece = function(square, color, type) {
 }
 
 
-
+// !reset
 var setNewBoard = function(square, x, y) {
   if(y == 7) {
     if(x == 0 || x == 7) {
@@ -185,15 +245,14 @@ var setNewBoard = function(square, x, y) {
  }
 }
 
-
 var boardInfo = function(square){
-  if (index === 0) {
+  if (i === 0) {
     square.classList.add("number");
   }
   
-  else if (index === 8) {
+  else if (i === 8) {
     black = !black
-    index = 0;
+    i = 0;
     letterIndex++;
   }
   
@@ -203,13 +262,13 @@ var boardInfo = function(square){
   
   if (black) { 
     square.classList.add("darkSquare");
-    index++;
+    i++;
     black = !black;
   }
 
   else{
     square.classList.add("whiteSquare");  
-    index++;
+    i++;
     black = !black;
   }
 }
@@ -217,34 +276,3 @@ var boardInfo = function(square){
 LetterNumber();
 drawBoard();
 
-fetch("./character.json", {})
-.then((response) => {
-    console.log(response);
-    return response.json();
-})
-
-.then((data) => {
-    console.log(data);
-    data.forEach((character) => {
-      let newDiv = document.createElement("div");
-
-      
-      let characterPhoto = new Image (150,250);
-      characterPhoto.src = character.photo;
-      newDiv.append(characterPhoto);
-   
-      let movieTitle = document.createElement("h2");
-
-      movieTitle.innerText = character.name;
-      newDiv.append(movieTitle);
-
-      let characterAlias = document.createElement("p");
-      characterAlias.innerText = "Alias: " + character.alias;
-      newDiv.append(characterAlias);
-
-      document.querySelector("#json").append(newDiv);
-    });
-  })
-  .catch((error) => {
-    console.error(error);
-  });

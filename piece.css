@@ -17,17 +17,22 @@
 }
 
 .placed {
-  display: unset;
-  /* margin: 0 auto; */
   cursor: pointer;
   cursor: grab;
-  padding: 12%;
-}
-
-.placed:hover {
-  cursor: grab;
+  padding: 11.64px;
 }
 
 .square.hover {
   border: 2px solid black;
+}
+
+.placed.hover {
+  transform: scale(1.25);
+}
+
+.lastPlaced {
+  background-color: yellow;
+}
+.newPlaced {
+  background-color: red;
 }
