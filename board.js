@@ -1,14 +1,16 @@
-var stats;
 const board = document.querySelector(".boardGrid");
 const boardLetters = document.querySelector(".letters");
 const boardNumbers = document.querySelector(".numbers");
 const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
+var colorGlobal;
 let i = 0;
 let letterIndex = 0;
 let black = false;
+var move2 = new Audio('Sound/move3.wav');
 
+var availablePlaces = true;
 const wikiLink = "https://upload.wikimedia.org/wikipedia/commons";
 
 //!Chess pieces
@@ -31,20 +33,6 @@ var chessPieces = {
   }
 };
 
-var mode = getStoredValue('someVarName');
-
-function Save(mode) {
-    mode = mode;
-    storeValue('someVarName', mode);
-}
-
-function storeValue(key, value) {
-    localStorage.setItem(key, value);
-}
-
-function getStoredValue(key) {
-    return localStorage.getItem(key);
-}
 
 var drawBoard = function(){
   for (let y = 0; y < 8; y++) {
@@ -61,25 +49,59 @@ var drawBoard = function(){
     square.addEventListener("dragover", dragOver);
     square.addEventListener("dragleave", dragLeave);
     square.addEventListener("drop", onDrop);
-    square .addEventListener("dragstart", dragStart);
+    square.addEventListener("dragstart", dragStart);
     square.addEventListener("dragend", dragEnd)
     
     boardInfo(square);
     square.appendChild(Piece);
     board.appendChild(square);
+      if (square.innerHTML.includes("false")) { 
+        Piece.remove();
+      }
     }
   }
 }
 
+var setPiece = function(piece, color, type) {
+  piece.src = chessPieces[color][type];
+  piece.classList.add("placed");
+  piece.classList.add(color);
+  piece.classList.add(type);
+  board.appendChild(piece);
+  colorGlobal = color;
+}
+
+var getNextMoves = function(color, event) {
+
+    var nextMoves = [];
+
+    if (color === "black" && event.target.classList.contains === "black") {
+      availablePlaces = false;
+    }
+    // else if(color === "white" && event.target.classList.contains === "white")
+    // {
+      // event.target.classList.contains = "white" = availablePlaces = false;
+    // }
+
+    return nextMoves;
+ }
+
 var dragged,lastdragged,prevPlace, newPlace, lastPiece;
 
 function dragStart(event) {
-  if(event.target.classList.contains("placed") && !event.target.classList.contains("sqyare") )
+  if(event.target.classList.contains("placed") && !event.target.classList.contains("square") )
   {
+    console.log(colorGlobal);
+    getNextMoves(colorGlobal, event);
+
     event.dataTransfer.setData("text/plain", event.target.id); 
     dragged = event.target;
     lastdragged = event.target.parentNode;
     
+    for (let i = 0; i < board.childNodes.length; i++) {
+      board.childNodes[i].classList.add("availablePlaces");
+    }
+
     if (prevPlace == null) {
       prevPlace = lastdragged;
     }
@@ -89,7 +111,6 @@ function dragStart(event) {
       newPlace = dragged;
     }
     else return false;
-    
   }
   else return false;
 }
@@ -120,48 +141,82 @@ function dragLeave(event) {
     return false
   }
 }
-
+var pieceNow;
 function onDrop(event) { 
   event.target.classList.remove("hover");
+  pieceNow = event.target;
 
   var statsArray = ["Dragged: " + dragged.outerHTML, "where Now: " + event.target.outerHTML, "lastDragged: " + lastdragged.outerHTML, "Dragged Classes: " + dragged.classList, "where Now Classes: " + event.target.classList, "lastDragged Classes: " + lastdragged.classList];
   
-  // statsFullArray.push(statsArray);
 
-  // !Tills stats faktiskt funkar...
-  // Save(statsFullArray);
+  for (let i = 0; i < board.childNodes.length; i++) {
+    board.childNodes[i].classList.remove("availablePlaces");
+  }
+  move2.play();
+  console.log(statsArray);
+  console.log(availablePlaces);
+  DropLogic(event);
+}
 
+function playAudio() { 
+} 
+
+var mode = getStoredValue('someVarName');
+
+function Save(mode) {
+    mode = mode;
+    storeValue('someVarName', mode);
+}
+
+function storeValue(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function getStoredValue(key) {
+    return localStorage.getItem(key);
+}
+
+var DropLogic = function(event){
+  if (dragged.classList.contains("white")) {
+    // availablePlaces = false;
+  }
+
+  else if (dragged.classList.contains("black"))
+  {
+    // availablePlaces = false;
+  }
+  
   if (prevPlace != null && dragged != event.target) {
     prevPlace.classList.remove("lastPlaced");
     setTimeout(function(){ prevPlace = lastdragged; });
   }
   else return false;
 
+  var lastRed = event.target;
   // !bruh
-  if(event.target.classList.contains("newPlaced") && event.target.classList.contains("placed") && dragged != event.target )
+  if(event.target.classList.contains("newPlaced") && event.target.classList.contains("placed") && dragged != event.target && availablePlaces)
   {
     event.target.classList.add("newPlaced");
     console.log("1");
   }  
-  
-  else if(event.target.classList.contains("placed") && !event.target.classList.contains("newPlaced") && dragged != event.target )
+  else if(event.target.classList.contains("placed") && !event.target.classList.contains("newPlaced") && dragged != event.target  && availablePlaces)
   {
     event.target.classList.add("newPlaced");
+    lastRed = event.target;
     newPlace.classList.remove("newPlaced");
     console.log("2");
   }
-    
-  else if (newPlace != null && dragged != event.target) {;
-      event.target.classList.remove("newPlaced"); 
-      newPlace.classList.remove("newPlaced");
-      dragged.classList.add("newPlaced");
-      newPlace = dragged;
-      console.log("3");
-  }
-
-  else return false;
-
   
+  else if (newPlace != null && dragged != event.target) {;
+    // lastRed.childNodes.classList.remove("newPlaced");
+    newPlace.classList.remove("newPlaced");
+    event.target.classList.remove("newPlaced");
+    dragged.classList.add("newPlaced");
+    newPlace = dragged;
+    console.log(lastRed.childNodes.classList);
+  }
+  
+  else return false;
   // !Om den hamnar i samma eller inte
   if (dragged != event.target) {
     event.target.classList.add("placed");
@@ -170,9 +225,7 @@ function onDrop(event) {
     event.target.classList.add("placed");
   }
   else return false;
-  console.log(statsArray);
 }
-
 
 var pieceCheck = function (piece, checkClass) {
   if (piece.classList.contains(checkClass))
@@ -196,17 +249,6 @@ var LetterNumber = function(){
     boardNumbers.appendChild(number);
   }
 }
-
-var setPiece = function(square, color, type) {
-  square.src = chessPieces[color][type];
-  square.classList.add("placed");
-  square.classList.add(color);
-  square.classList.add(type);
-  board.appendChild(square);
-
-  suggestNextMoves(getNextMoves(color, type));
-}
-
 
 // !reset
 var setNewBoard = function(square, x, y) {
@@ -275,129 +317,6 @@ var boardInfo = function(square){
   }
 }
 
-	//Returns possible moves of the selected piece
-	var getNextMoves = function(selectedPiece, selectedBox) {
-    var selectedPieceInfo = selectedPiece.split('-');
-    var color = selectedPieceInfo[0];
-    var type = selectedPieceInfo[1];
-
-    var id = selectedBox.split('-');
-    var i = parseInt(id[1]);
-    var j = parseInt(id[2]);
-
-    var nextMoves = [];
-
-    switch(type) {
-       case 'pawn':
-         if(color === 'black') {
-            var moves = [
-               [0, 1], [0, 2], [1, 1], [-1, 1]
-            ];
-         } else {
-            var moves = [
-               [0, -1], [0, -2], [1, -1], [-1, -1]
-            ];
-         }
-         nextMoves = getPawnMoves(i, j, color, moves);
-         break;
-       case 'rook':
-         var moves = [
-            [0, 1], [0, -1], [1, 0], [-1, 0]
-         ];
-         nextMoves = getQueenMoves(i, j, color, moves);
-         break;
-       case 'knight':
-         var moves = [
-            [-1, -2], [-2, -1], [1, -2], [-2, 1],
-            [2, -1], [-1, 2], [2, 1], [1, 2]
-         ];
-         nextMoves = getKnightMoves(i, j, color, moves);
-         break;
-       case 'bishop':
-         var moves = [
-            [1, 1], [1, -1], [-1, 1], [-1, -1]
-         ];
-         nextMoves = getQueenMoves(i, j, color, moves);
-         break;
-       case 'queen':
-         var moves1 = [
-            [1, 1], [1, -1], [-1, 1], [-1, -1]
-         ];
-         var moves2 = [
-            [0, 1], [0, -1], [1, 0], [-1, 0]
-         ];
-         nextMoves = getQueenMoves(i, j, color, moves1)
-                 .concat(getQueenMoves(i, j, color, moves2));
-         break;
-       case 'king':
-         var moves = [
-            [1, 1], [1, -1], [-1, 1], [-1, -1],
-            [0, 1], [0, -1], [1, 0], [-1, 0]
-         ];
-         nextMoves = getKnightMoves(i, j, color, moves);
-         break;
-       default: 
-         break;
-    }
-    return nextMoves;
- }
-
- //Calculate next move of rook, bishop and queen pieces
- var getQueenMoves = function(i, j, color, moves) {
-    var nextMoves = [];
-    for(var move of moves) {
-       var tI = i + move[0];
-       var tJ = j + move[1];
-       var sugg = true;
-       while(sugg && !outOfBounds(tI, tJ)) {
-         var box = $('#box-' + tI + '-' + tJ);
-         if(box.hasClass('placed')) {
-            if(box.attr('piece').indexOf(color) >= 0) {
-               sugg = false;
-            } else {
-               nextMoves.push([tI, tJ]);
-               sugg = false;
-            }
-         }
-         if(sugg) {
-            nextMoves.push([tI, tJ]);
-            tI += move[0];
-            tJ += move[1];
-         }
-       }
-    }
-    return nextMoves;
- }
-
- //Calculate next moves for knight or king pieces
- var getKnightMoves = function(i, j, color, moves) {
-    var nextMoves = [];
-    for(var move of moves) {
-       var tI = i + move[0];
-       var tJ = j + move[1];
-       if( !outOfBounds(tI, tJ) ) {
-         var box = $('#box-' + tI + '-' + tJ);
-         if(!box.hasClass('placed') || box.attr('piece').indexOf(color) < 0) {
-            nextMoves.push([tI, tJ]);
-         }
-       }
-    }
-    return nextMoves;
- }
-
- //Check if position i, j is in the board game
- var outOfBounds = function(i, j) {
-    return ( i < 0 || i >= 8 || j < 0 || j >= 8 );
- }
-
- //Show possible moves by add suggestion to boxes
- var suggestNextMoves = function(nextMoves) {
-    for(var move of nextMoves) {
-       var box =('#box-' + move[0] + '-' + move[1]);
-       box.classList.add('suggest');
-    }
- }
-
-LetterNumber();
+ LetterNumber();
 drawBoard();
 

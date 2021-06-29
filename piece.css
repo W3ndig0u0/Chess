@@ -26,6 +26,10 @@
   border: 2px solid black;
 }
 
+.square.availablePlaces {
+  background-color: gray;
+}
+
 .placed.hover {
   transform: scale(1.25);
 }
