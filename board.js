@@ -8,10 +8,10 @@ var colorGlobal;
 let i = 0;
 let letterIndex = 0;
 let black = false;
+var availablePlaces = new Boolean(true);
 var move1 = new Audio('Sound/move2.wav');
 var move2 = new Audio('Sound/move3.wav');
 
-var availablePlaces = true;
 const wikiLink = "https://upload.wikimedia.org/wikipedia/commons";
 
 //!Chess pieces
@@ -74,25 +74,30 @@ var dragged,lastdragged,prevPlace, newPlace, lastPiece;
 function dragStart(event) {
   if(event.target.classList.contains("placed") && !event.target.classList.contains("square") )
   {
-
     event.dataTransfer.setData("text/plain", event.target.id); 
     dragged = event.target;
     lastdragged = event.target.parentNode;
     
     for (let i = 0; i < board.childNodes.length; i++) {
       board.childNodes[i].classList.add("availablePlaces");
+        if(typeof(board.childNodes[i].childNodes[0]) != 'undefined'){
+          if (board.childNodes[i].childNodes[0].classList.contains("black") || board.childNodes[i].childNodes[0].classList.contains("white")) {
+            board.childNodes[i].classList.remove("availablePlaces");
+          }
+        }
+      }
+
+      if (prevPlace == null) {
+        prevPlace = lastdragged;
+      }
+    else return false;
+      
+      if (newPlace == null) {
+        newPlace = dragged;
+      }
+    else return false;
     }
 
-    if (prevPlace == null) {
-      prevPlace = lastdragged;
-    }
-    else return false;
-    
-    if (newPlace == null) {
-      newPlace = dragged;
-    }
-    else return false;
-  }
   else return false;
 }
 
@@ -142,7 +147,14 @@ function onDrop(event) {
 
 var DropLogic = function(event){
 
-  
+  if (dragged.classList.contains("white") && event.target.classList.contains("white") || dragged.classList.contains("black") && event.target.classList.contains("black"))
+  {
+    availablePlaces = false;
+  }
+  else {
+    availablePlaces = true;
+  }
+
   if (prevPlace != null && dragged != event.target) {
     prevPlace.classList.remove("lastPlaced");
     setTimeout(function(){ prevPlace = lastdragged; });
@@ -160,6 +172,7 @@ var DropLogic = function(event){
       var lastPlaceLocal = dragged;
       lastPlaceGlobal = lastPlaceLocal;
     }
+
     else{
       newPlace.classList.remove("newPlaced");
       dragged.classList.add("newPlaced");
