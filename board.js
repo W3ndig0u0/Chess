@@ -8,6 +8,7 @@ var colorGlobal;
 let i = 0;
 let letterIndex = 0;
 let black = false;
+var move1 = new Audio('Sound/move2.wav');
 var move2 = new Audio('Sound/move3.wav');
 
 var availablePlaces = true;
@@ -32,7 +33,6 @@ var chessPieces = {
      'pawn': wikiLink +  '/0/04/Chess_plt60.png'
   }
 };
-
 
 var drawBoard = function(){
   for (let y = 0; y < 8; y++) {
@@ -67,32 +67,13 @@ var setPiece = function(piece, color, type) {
   piece.classList.add("placed");
   piece.classList.add(color);
   piece.classList.add(type);
-  board.appendChild(piece);
-  colorGlobal = color;
 }
-
-var getNextMoves = function(color, event) {
-
-    var nextMoves = [];
-
-    if (color === "black" && event.target.classList.contains === "black") {
-      availablePlaces = false;
-    }
-    // else if(color === "white" && event.target.classList.contains === "white")
-    // {
-      // event.target.classList.contains = "white" = availablePlaces = false;
-    // }
-
-    return nextMoves;
- }
 
 var dragged,lastdragged,prevPlace, newPlace, lastPiece;
 
 function dragStart(event) {
   if(event.target.classList.contains("placed") && !event.target.classList.contains("square") )
   {
-    console.log(colorGlobal);
-    getNextMoves(colorGlobal, event);
 
     event.dataTransfer.setData("text/plain", event.target.id); 
     dragged = event.target;
@@ -141,90 +122,91 @@ function dragLeave(event) {
     return false
   }
 }
+
 var pieceNow;
+var lastPlaceGlobal;
+
 function onDrop(event) { 
   event.target.classList.remove("hover");
   pieceNow = event.target;
 
   var statsArray = ["Dragged: " + dragged.outerHTML, "where Now: " + event.target.outerHTML, "lastDragged: " + lastdragged.outerHTML, "Dragged Classes: " + dragged.classList, "where Now Classes: " + event.target.classList, "lastDragged Classes: " + lastdragged.classList];
-  
 
   for (let i = 0; i < board.childNodes.length; i++) {
     board.childNodes[i].classList.remove("availablePlaces");
   }
-  move2.play();
   console.log(statsArray);
   console.log(availablePlaces);
   DropLogic(event);
 }
 
-function playAudio() { 
-} 
-
-var mode = getStoredValue('someVarName');
-
-function Save(mode) {
-    mode = mode;
-    storeValue('someVarName', mode);
-}
-
-function storeValue(key, value) {
-    localStorage.setItem(key, value);
-}
-
-function getStoredValue(key) {
-    return localStorage.getItem(key);
-}
-
 var DropLogic = function(event){
-  if (dragged.classList.contains("white")) {
-    // availablePlaces = false;
-  }
 
-  else if (dragged.classList.contains("black"))
-  {
-    // availablePlaces = false;
-  }
   
   if (prevPlace != null && dragged != event.target) {
     prevPlace.classList.remove("lastPlaced");
     setTimeout(function(){ prevPlace = lastdragged; });
   }
   else return false;
+  
+  if(event.target.classList.contains("newPlaced") && event.target.classList.contains("placed")  && availablePlaces || event.target.classList.contains("placed") && !event.target.classList.contains("newPlaced")  && availablePlaces )
+  {
+    if (lastPlaceGlobal === undefined) {
+      newPlace.classList.remove("newPlaced");
+      dragged.classList.add("newPlaced");
+      console.log("2");
+      move1.play();
+      lastPlaceGlobal = undefined;
+      var lastPlaceLocal = dragged;
+      lastPlaceGlobal = lastPlaceLocal;
+    }
+    else{
+      newPlace.classList.remove("newPlaced");
+      dragged.classList.add("newPlaced");
+      console.log("2");
+      move1.play();
+      var lastPlaceLocal = dragged;
+      lastPlaceGlobal = lastPlaceLocal;
+    }
+  }
+  
+  else if (!event.target.classList.contains("placed") && dragged != event.target  && availablePlaces) {
+    if (lastPlaceGlobal === undefined) {
+      newPlace.classList.remove("newPlaced");
+      dragged.classList.add("newPlaced");
+      newPlace = dragged;
+      console.log("1");
+      move2.play();
+    }
 
-  var lastRed = event.target;
-  // !bruh
-  if(event.target.classList.contains("newPlaced") && event.target.classList.contains("placed") && dragged != event.target && availablePlaces)
-  {
-    event.target.classList.add("newPlaced");
-    console.log("1");
-  }  
-  else if(event.target.classList.contains("placed") && !event.target.classList.contains("newPlaced") && dragged != event.target  && availablePlaces)
-  {
-    event.target.classList.add("newPlaced");
-    lastRed = event.target;
-    newPlace.classList.remove("newPlaced");
-    console.log("2");
+    else {
+      lastPlaceGlobal.classList.remove("newPlaced");
+      newPlace.classList.remove("newPlaced");
+      dragged.classList.add("newPlaced");
+      newPlace = dragged;
+      console.log("1");
+      move2.play();
+      lastPlaceGlobal = undefined;
+    };
   }
-  
-  else if (newPlace != null && dragged != event.target) {;
-    // lastRed.childNodes.classList.remove("newPlaced");
-    newPlace.classList.remove("newPlaced");
-    event.target.classList.remove("newPlaced");
-    dragged.classList.add("newPlaced");
-    newPlace = dragged;
-    console.log(lastRed.childNodes.classList);
+  console.log(lastPlaceGlobal);
+
+  if (dragged != event.target && availablePlaces) {    
+    if (event.target.classList.contains("square")) {
+      event.target.appendChild(dragged);
+      event.target.classList.add("placed");      
+      lastdragged.classList.add("lastPlaced");
+    }
+    else {
+      event.target.parentNode.appendChild(dragged);
+      dragged.appendChild(event.target);
+      event.target.classList.add("placed");      
+      lastdragged.classList.add("lastPlaced");
+    }
   }
-  
+
   else return false;
-  // !Om den hamnar i samma eller inte
-  if (dragged != event.target) {
-    event.target.classList.add("placed");
-    event.target.appendChild(dragged);
-    lastdragged.classList.add("lastPlaced");
-    event.target.classList.add("placed");
-  }
-  else return false;
+  
 }
 
 var pieceCheck = function (piece, checkClass) {
