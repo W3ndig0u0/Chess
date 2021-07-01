@@ -26,8 +26,17 @@
   border: 2px solid black;
 }
 
-.square.availablePlaces {
-  background-color: gray;
+.square.availablePlaces::before {
+  content: "";
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: rgba(128, 128, 128, 0.7);
 }
 
 .placed.hover {
