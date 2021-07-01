@@ -1,2 +1,1 @@
-# Chess
-I AM SIMPLY TAKING A BREAK FROM PONG, I DID NOT ABANDON It...
+# bruh im starting to regret my life choices
