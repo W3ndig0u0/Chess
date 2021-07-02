@@ -82,13 +82,14 @@ var setPiece = function (piece, color, type) {
     piece.classList.add("placed");
     piece.classList.add(color);
     piece.classList.add(type);
+    piece.classList.add(color+type);
     moves(type, color, undefined, piece);
 }
 
 
+
+
 var moves = function(type, color, square, event){ 
-  var nextMoves = [];
-  console.log(nextMoves);
   // console.log(type, color, square, event);
 
     switch(type) {
@@ -104,33 +105,61 @@ var moves = function(type, color, square, event){
          }
          nextMoves = getPawnMoves(moves, square, color, event);
          break;
+         case 'rook':
+					nextMoves = getRookMoves(square, color, event);
+					break;
+			  // case 'knight':
+				// 	var moves = [
+				// 		 [-1, -2], [-2, -1], [1, -2], [-2, 1],
+				// 		 [2, -1], [-1, 2], [2, 1], [1, 2]
+				// 	];
+				// 	nextMoves = getKnightMoves(i, j, color, moves);
+				// 	break;
+			  // case 'bishop':
+				// 	var moves = [
+				// 		 [1, 1], [1, -1], [-1, 1], [-1, -1]
+				// 	];
+				// 	nextMoves = getQueenMoves(i, j, color, moves);
+				// 	break;
+			  // case 'queen':
+				// 	var moves1 = [
+				// 		 [1, 1], [1, -1], [-1, 1], [-1, -1]
+				// 	];
+				// 	var moves2 = [
+				// 		 [0, 1], [0, -1], [1, 0], [-1, 0]
+				// 	];
+				// 	nextMoves = getQueenMoves(i, j, color, moves1).concat(getQueenMoves(i, j, color, moves2));
+				// 	break;
+			  // case 'king':
+				// 	var moves = [
+				// 		 [1, 1], [1, -1], [-1, 1], [-1, -1],
+				// 		 [0, 1], [0, -1], [1, 0], [-1, 0]
+				// 	];
+				// 	nextMoves = getKnightMoves(i, j, color, moves);
+					break;
        default: 
          break;
-        }
-  return nextMoves;
-}
-
-var getPawnMoves = function(moves, square, color, event) {
-  getMoveIndex(square);
-  var nextMoves = [];
+      }
+  }
   
-  var moveNumberDouble = moves[1][1];
-  var moveNumber = moves[0][1];
-  
-  let NewWhereNumberGlobalDouble = whereNumberGlobal - moveNumberDouble;
-  let NewWhereNumberGlobal = whereNumberGlobal - moveNumber;
-
+  var getPawnMoves = function(moves, square, color, event) {
+    getMoveIndex(square);
+    
+    var moveNumber = moves[0][1];
+    var moveNumberDouble = moves[1][1];
+    
+    let NewWhereNumberGlobalDouble = whereNumberGlobal - moveNumberDouble;
+    let NewWhereNumberGlobal = whereNumberGlobal - moveNumber;
+    
   if (eventIndexNumberGlobal == 1 && color === 'black' || color == "white" && eventIndexNumberGlobal == 6 ) {
     document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobalDouble)[0].classList.add("availablePlaces");
     document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
   }
-
+  
   else if( eventIndexNumberGlobal == 1 || eventIndexNumberGlobal == 2 || eventIndexNumberGlobal == 3 || eventIndexNumberGlobal == 4 || eventIndexNumberGlobal == 5 || eventIndexNumberGlobal == 6){
     document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
   }
-
-  // !passant
-
+  
   
   if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
     if (color == "white") {
@@ -142,18 +171,56 @@ var getPawnMoves = function(moves, square, color, event) {
       event.classList.replace("pawn", "queen");
     }
   }
+}
 
-  return nextMoves;
+var getRookMoves = function(square, color, event) {
+  getMoveIndex(square);
+  
+  let NewWhereNumberGlobal = whereNumberGlobal - 1;
+
+  if (whereNumberGlobal != undefined) {
+      NewWhereNumberGlobal = 1;
+      eventIndexLetterGlobal = 1;
+      for (let i = 0; i < 8; i++) {
+        // !f this man (Rock cant proceed if a ally is in front)
+        // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] == undefined && color === "black" && document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0].classList.contains("black")) {
+          
+        //   document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+        //   NewWhereNumberGlobal++;
+        // }
+        
+        // else if(color === "white" && document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0].classList.contains("white")&& document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] == undefined)
+        // {
+          //     document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+          //     NewWhereNumberGlobal++;
+          // }
+          
+          // else{
+            // console.log(whereLetterGlobal + NewWhereNumberGlobal);
+            // console.log(whereLetterGlobal + NewWhereNumberGlobal); 
+            // console.log(document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0].classList);
+            
+            // console.log(square)
+            console.log(whereLetterGlobal + NewWhereNumberGlobal);
+            document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+            NewWhereNumberGlobal++;
+            console.log(letters.indexOf(eventIndexLetterGlobal))
+            eventIndexLetterGlobal++;
+            // whereLetterGlobal = letters.indexOf(eventIndexLetterGlobal);
+
+            // console.log(NewWhereNumberGlobal);
+    }
+  }
 }
 
 var getMoveIndex = function(square) {
-   var where = square;
-
-   if (where != undefined) {
-
+  var where = square;
+  
+  if (where != undefined) {
+    
     const whereLetter = where.charAt(0);
     const whereNumber = where.charAt(1);
-
+    
     whereLetterGlobal = whereLetter
     whereNumberGlobal = whereNumber;
     function FunctionWhereLetter(letter) {
@@ -172,7 +239,6 @@ var getMoveIndex = function(square) {
    }
    else return false;
 }
-
 
 var dragged, lastdragged, prevPlace, newPlace, lastPiece;
 
@@ -434,6 +500,7 @@ var boardInfo = function (square) {
     black = !black;
   }
 }
+
 
 LetterNumber();
 drawBoard();
