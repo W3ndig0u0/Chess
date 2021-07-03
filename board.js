@@ -106,7 +106,7 @@ var moves = function(type, color, square, event){
          nextMoves = getPawnMoves(moves, square, color, event);
          break;
          case 'rook':
-					nextMoves = getRookMoves(square, color, event);
+					nextMoves = getRookMoves(square, color);
 					break;
 			  // case 'knight':
 				// 	var moves = [
@@ -115,10 +115,9 @@ var moves = function(type, color, square, event){
 				// 	];
 				// 	nextMoves = getKnightMoves(i, j, color, moves);
 				// 	break;
-			  // case 'bishop':
-				// 	var moves = [
-				// 		 [1, 1], [1, -1], [-1, 1], [-1, -1]
-				// 	];
+			  case 'bishop':
+          nextMoves = getBishopMoves(square, color);
+					break;
 				// 	nextMoves = getQueenMoves(i, j, color, moves);
 				// 	break;
 			  // case 'queen':
@@ -142,7 +141,7 @@ var moves = function(type, color, square, event){
       }
   }
   
-  var getPawnMoves = function(moves, square, color, event) {
+var getPawnMoves = function(moves, square, color, event) {
     getMoveIndex(square);
     
     var moveNumber = moves[0][1];
@@ -173,45 +172,111 @@ var moves = function(type, color, square, event){
   }
 }
 
-var getRookMoves = function(square, color, event) {
+var getBishopMoves = function(square, color) {
   getMoveIndex(square);
   
-  let NewWhereNumberGlobal = whereNumberGlobal - 1;
-
   if (whereNumberGlobal != undefined) {
+    if (color === "black") {
       NewWhereNumberGlobal = 1;
-      eventIndexLetterGlobal = 1;
-      for (let i = 0; i < 8; i++) {
-        // !f this man (Rock cant proceed if a ally is in front)
-        // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] == undefined && color === "black" && document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0].classList.contains("black")) {
-          
-        //   document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-        //   NewWhereNumberGlobal++;
-        // }
-        
-        // else if(color === "white" && document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0].classList.contains("white")&& document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] == undefined)
-        // {
-          //     document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-          //     NewWhereNumberGlobal++;
-          // }
-          
-          // else{
-            // console.log(whereLetterGlobal + NewWhereNumberGlobal);
-            // console.log(whereLetterGlobal + NewWhereNumberGlobal); 
-            // console.log(document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0].classList);
-            
-            // console.log(square)
-            console.log(whereLetterGlobal + NewWhereNumberGlobal);
+    }
+    else if (color === "white") {
+      NewWhereNumberGlobal = 8;
+    }
+
+    if (color === "black") {
+      if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+        for (let i = 0; i < 8; i++) {
             document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
             NewWhereNumberGlobal++;
-            console.log(letters.indexOf(eventIndexLetterGlobal))
-            eventIndexLetterGlobal++;
-            // whereLetterGlobal = letters.indexOf(eventIndexLetterGlobal);
-
-            // console.log(NewWhereNumberGlobal);
+        }
+      }
+        else return false;
+      }
+          
+    else if(color === "white")
+        {
+          if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+            if(eventIndexLetterGlobal == 0)
+            {
+              for (let i = 0; i < 8; i++) {
+                whereLetterGlobal = letters[i];
+                console.log(whereLetterGlobal + NewWhereNumberGlobal);
+                document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+                NewWhereNumberGlobal--;
+              }
+            }
+            else if (eventIndexLetterGlobal == 7) 
+            {
+              for (let i = 0; i < 8; i++) {
+                whereLetterGlobal = letters[i];
+                console.log(whereLetterGlobal + NewWhereNumberGlobal);
+                document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+                NewWhereNumberGlobal--;
+              }
+            }
+        }
+          else return false;
+      }
     }
   }
-}
+  
+var getRookMoves = function(square, color) {
+  getMoveIndex(square);
+
+  if (whereNumberGlobal != undefined) {
+    if (color === "black") {
+      NewWhereNumberGlobal = 1;
+    }
+    else if (color === "white") {
+      NewWhereNumberGlobal = 8;
+    }
+
+    if (color === "black") {
+      if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+        for (let i = 0; i < 8; i++) {
+          whereLetterGlobal = square.charAt(0);
+          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+          NewWhereNumberGlobal++;
+        }
+        
+        for (let i = 0; i < 8; i++) {
+          whereLetterGlobal = letters[i];
+          NewWhereNumberGlobal = square.charAt(1);
+          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+        }
+        document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+      }
+        else return false;
+      }
+          
+      else if(color === "white")
+      {
+          if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+            for (let i = 0; i < 8; i++) {
+              whereLetterGlobal = square.charAt(0);
+              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+              NewWhereNumberGlobal--;
+              document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+
+            // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
+            //   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0].classList.contains("white")) {
+            //       break;
+            //     }
+            //   }
+            }
+            
+            for (let i = 0; i < 8; i++) {
+              whereLetterGlobal = letters[i];
+              NewWhereNumberGlobal = square.charAt(1);
+              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+            }
+            document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+          }
+        else return false;
+      }
+    }
+  }
+
 
 var getMoveIndex = function(square) {
   var where = square;
@@ -319,7 +384,7 @@ function onDrop(event) {
   event.target.classList.remove("hover");
   pieceNow = event.target;
 
-  var statsArray = ["Dragged: " + dragged.outerHTML, "where Now: " + event.target.outerHTML, "lastDragged: " + lastdragged.outerHTML, "Dragged Classes: " + dragged.classList, "where Now Classes: " + event.target.classList, "lastDragged Classes: " + lastdragged.classList];
+  // var statsArray = ["Dragged: " + dragged.outerHTML, "where Now: " + event.target.outerHTML, "lastDragged: " + lastdragged.outerHTML, "Dragged Classes: " + dragged.classList, "where Now Classes: " + event.target.classList, "lastDragged Classes: " + lastdragged.classList];
 
   // console.log(statsArray);
   DropLogic(event);
