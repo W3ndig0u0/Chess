@@ -40,7 +40,7 @@ var chessPieces = {
   }
 };
 
-
+// !ritar bordet
 var drawBoard = function () {
   for (let y = 0; y < 8; y++) {
     for (let x = 0; x < 8; x++) {
@@ -77,6 +77,7 @@ var drawBoard = function () {
   }
 }
 
+// !Ger info till piecer
 var setPiece = function (piece, color, type) {
     piece.src = chessPieces[color][type];
     piece.classList.add("placed");
@@ -86,255 +87,15 @@ var setPiece = function (piece, color, type) {
     moves(type, color, undefined, piece);
 }
 
-
-
-
-var moves = function(type, color, square, event){ 
-  // console.log(type, color, square, event);
-
-    switch(type) {
-       case 'pawn':
-         if(color === 'black') {
-            var moves = [
-              [0, -1], [0, -2], [1, -1], [-1, -1]
-            ];
-          } else {
-            var moves = [
-              [0, 1], [0, 2], [1, 1], [-1, 1]
-            ];
-         }
-         nextMoves = getPawnMoves(moves, square, color, event);
-         break;
-         case 'rook':
-					nextMoves = getRookMoves(square, color);
-					break;
-			  // case 'knight':
-				// 	var moves = [
-				// 		 [-1, -2], [-2, -1], [1, -2], [-2, 1],
-				// 		 [2, -1], [-1, 2], [2, 1], [1, 2]
-				// 	];
-				// 	nextMoves = getKnightMoves(i, j, color, moves);
-				// 	break;
-			  case 'bishop':
-          nextMoves = getBishopMoves(square, color);
-					break;
-				// 	nextMoves = getQueenMoves(i, j, color, moves);
-				// 	break;
-			  // case 'queen':
-				// 	var moves1 = [
-				// 		 [1, 1], [1, -1], [-1, 1], [-1, -1]
-				// 	];
-				// 	var moves2 = [
-				// 		 [0, 1], [0, -1], [1, 0], [-1, 0]
-				// 	];
-				// 	nextMoves = getQueenMoves(i, j, color, moves1).concat(getQueenMoves(i, j, color, moves2));
-				// 	break;
-			  // case 'king':
-				// 	var moves = [
-				// 		 [1, 1], [1, -1], [-1, 1], [-1, -1],
-				// 		 [0, 1], [0, -1], [1, 0], [-1, 0]
-				// 	];
-				// 	nextMoves = getKnightMoves(i, j, color, moves);
-					break;
-       default: 
-         break;
-      }
-  }
-  
-var getPawnMoves = function(moves, square, color, event) {
-    getMoveIndex(square);
-    
-    var moveNumber = moves[0][1];
-    var moveNumberDouble = moves[1][1];
-    
-    let NewWhereNumberGlobalDouble = whereNumberGlobal - moveNumberDouble;
-    let NewWhereNumberGlobal = whereNumberGlobal - moveNumber;
-    
-  if (eventIndexNumberGlobal == 1 && color === 'black' || color == "white" && eventIndexNumberGlobal == 6 ) {
-    document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobalDouble)[0].classList.add("availablePlaces");
-    document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-  }
-  
-  else if( eventIndexNumberGlobal == 1 || eventIndexNumberGlobal == 2 || eventIndexNumberGlobal == 3 || eventIndexNumberGlobal == 4 || eventIndexNumberGlobal == 5 || eventIndexNumberGlobal == 6){
-    document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-  }
-  
-  
-  if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
-    if (color == "white") {
-      event.src = "https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png";
-      event.classList.replace("pawn", "queen");
-    }
-    else if (color == "black"){
-      event.src = "https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png";
-      event.classList.replace("pawn", "queen");
-    }
-  }
-}
-
-var getBishopMoves = function(square, color) {
-  getMoveIndex(square);
-  
-  if (whereNumberGlobal != undefined) {
-    if (color === "black") {
-      NewWhereNumberGlobal = 1;
-    }
-    else if (color === "white") {
-      NewWhereNumberGlobal = 8;
-    }
-
-    if (color === "black") {
-      if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-        for (let i = 0; i < 8; i++) {
-            document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-            NewWhereNumberGlobal++;
-        }
-      }
-        else return false;
-      }
-          
-    else if(color === "white")
-        {
-          if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-            if(eventIndexLetterGlobal == 0)
-            {
-              for (let i = 0; i < 8; i++) {
-                whereLetterGlobal = letters[i];
-                console.log(whereLetterGlobal + NewWhereNumberGlobal);
-                document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-                NewWhereNumberGlobal--;
-              }
-            }
-            else if (eventIndexLetterGlobal == 7) 
-            {
-              for (let i = 0; i < 8; i++) {
-                whereLetterGlobal = letters[i];
-                console.log(whereLetterGlobal + NewWhereNumberGlobal);
-                document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-                NewWhereNumberGlobal--;
-              }
-            }
-        }
-          else return false;
-      }
-    }
-  }
-  
-var getRookMoves = function(square, color) {
-  getMoveIndex(square);
-
-  if (whereNumberGlobal != undefined) {
-    if (color === "black") {
-      NewWhereNumberGlobal = 1;
-    }
-    else if (color === "white") {
-      NewWhereNumberGlobal = 8;
-    }
-
-    if (color === "black") {
-      if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-        for (let i = 0; i < 8; i++) {
-          whereLetterGlobal = square.charAt(0);
-          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-          NewWhereNumberGlobal++;
-        }
-        
-        for (let i = 0; i < 8; i++) {
-          whereLetterGlobal = letters[i];
-          NewWhereNumberGlobal = square.charAt(1);
-          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-        }
-        document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
-      }
-        else return false;
-      }
-          
-      else if(color === "white")
-      {
-          if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-            for (let i = 0; i < 8; i++) {
-              whereLetterGlobal = square.charAt(0);
-              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-              NewWhereNumberGlobal--;
-              document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
-
-            // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
-            //   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0].classList.contains("white")) {
-            //       break;
-            //     }
-            //   }
-            }
-            
-            for (let i = 0; i < 8; i++) {
-              whereLetterGlobal = letters[i];
-              NewWhereNumberGlobal = square.charAt(1);
-              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-            }
-            document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
-          }
-        else return false;
-      }
-    }
-  }
-
-
-var getMoveIndex = function(square) {
-  var where = square;
-  
-  if (where != undefined) {
-    
-    const whereLetter = where.charAt(0);
-    const whereNumber = where.charAt(1);
-    
-    whereLetterGlobal = whereLetter
-    whereNumberGlobal = whereNumber;
-    function FunctionWhereLetter(letter) {
-      return letter >= whereLetter;
-    }
-
-    function FunctionWhereNumber(number) {
-      return number >= whereNumber;
-    }
-    
-    let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
-    let eventIndexNumberLocal = numbers.findIndex(FunctionWhereNumber);
-    
-    eventIndexNumberGlobal = eventIndexNumberLocal;
-    eventIndexLetterGlobal = eventIndexLetterLocal;
-   }
-   else return false;
-}
-
 var dragged, lastdragged, prevPlace, newPlace, lastPiece;
 
 function dragStart(event) {
   if (event.target.classList.contains("placed") && !event.target.classList.contains("square")) {
     moves(event.target.classList[2], event.target.classList[1], event.target.parentNode.classList[0], event.target);
-    
-    // for (var i = 0; i < document.querySelectorAll("square").length; i++) {
-    //   if (event.target.classList.contains("select").length > 0){        
-    //     event.target.classList[0].className = "";
-    //     event.target.classList.add("select");
-    //   }
-    //   else{
-    //     event.target.classList.add("select");
-    //   }
-    // }
-    
+
     event.dataTransfer.setData("text/plain", event.target.id);
     dragged = event.target;
     lastdragged = event.target.parentNode;
-    
-    for (let i = 0; i < board.childNodes.length; i++) {
-      // board.childNodes[i].classList.add("availablePlaces");
-      if (typeof (board.childNodes[i].childNodes[0]) != 'undefined') {
-        
-        if (board.childNodes[i].childNodes[0].classList.contains("black") || board.childNodes[i].childNodes[0].classList.contains("white")) {
-          // board.childNodes[i].classList.add("availablePieces");
-          // board.childNodes[i].classList.remove("availablePlaces");
-        }
-      }
-    }
 
     if (prevPlace == null) {
       prevPlace = lastdragged;
@@ -447,20 +208,6 @@ var DropLogic = function (event) {
     };
   }
 
-//   if (dragged != event.target && availablePlaces && event.target.classList.contains("availablePlaces")) {
-//       event.target.appendChild(dragged);
-//       event.target.classList.add("placed");
-//       lastdragged.classList.add("lastPlaced");
-//     // }
-    
-  // else if (dragged != event.target && availablePlaces && event.target.classList.contains("placed") && event.target.classList.contains("availablePlaces")) {
-//     event.target.parentNode.appendChild(dragged);
-//     dragged.appendChild(event.target);
-//     event.target.classList.add("placed");
-//     lastdragged.classList.add("lastPlaced");
-//   // }
-// }
-
     if (dragged != event.target && availablePlaces && event.target.classList.contains("availablePlaces")) {
       event.target.appendChild(dragged);
       event.target.classList.add("placed");      
@@ -477,6 +224,375 @@ var DropLogic = function (event) {
     }
 }
 
+// !Movement
+var moves = function(type, color, square, event){ 
+  switch(type) {
+     case 'pawn':
+       if(color === 'black') {
+          var moves = [
+            [0, -1], [0, -2], [1, -1], [-1, -1]
+          ];
+        } else {
+          var moves = [
+            [0, 1], [0, 2], [1, 1], [-1, 1]
+          ];
+       }
+       nextMoves = getPawnMoves(moves, square, color, event);
+       break;
+       case 'rook':
+        nextMoves = getRookMoves(square, color);
+        break;
+      // case 'knight':
+      // 	nextMoves = getKnightMoves(i, j, color, moves);
+      // 	break;
+      // case 'bishop':
+      //   nextMoves = getBishopMoves(square, color);
+      // 	break;
+      case 'queen':
+        nextMoves = getQueenMoves(square, color);
+        break;
+      // case 'king':
+      // 	nextMoves = getKnightMoves(i, j, color, moves);
+        break;
+     default: 
+       break;
+    }
+}
+
+var getPawnMoves = function(moves, square, color, event) {
+  getMoveIndex(square);
+  
+  var moveNumber = moves[0][1];
+  var moveNumberDouble = moves[1][1];
+  
+  let NewWhereNumberGlobalDouble = whereNumberGlobal - moveNumberDouble;
+  let NewWhereNumberGlobal = whereNumberGlobal - moveNumber;
+  
+  // !kollar om den har rört sig eller inte
+if (eventIndexNumberGlobal == 1 && color === 'black' || color == "white" && eventIndexNumberGlobal == 6 ) {
+  if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] != undefined) {
+        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+    }
+    else {
+      document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobalDouble)[0].classList.add("availablePlaces");
+      document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+    }
+  }
+}
+
+else if( eventIndexNumberGlobal == 1 || eventIndexNumberGlobal == 2 || eventIndexNumberGlobal == 3 || eventIndexNumberGlobal == 4 || eventIndexNumberGlobal == 5 || eventIndexNumberGlobal == 6)
+{
+  document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+}
+
+// !om någon framför, kan ej röra fram
+if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+  if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] != undefined) {
+      document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+    }
+  else return false;
+
+    const whereLetter = square.charAt(0);
+    whereLetterGlobal = whereLetter
+
+    function FunctionWhereLetter(letter) {
+      return letter >= whereLetter;
+    }
+
+    let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
+    
+    // !Sidan == KILLLL
+    if (eventIndexLetterLocal == 0) {
+      if (document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0] != undefined) {
+          document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+
+        // !samma färg = no kill :D
+        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+        {
+          document.getElementsByClassName(letters[eventIndexLetterLocal + 1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+        }
+
+      }
+    }
+
+    else if(eventIndexLetterLocal == 7){
+      if(document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
+      {
+
+          document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+        // !samma färg = no kill :D
+        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+        {
+          document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+        }
+
+      }
+    }
+    
+    else
+    {
+      if(document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
+      
+      document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+      
+      // !samma färg = no kill :D
+      
+      if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+      {
+        document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+      }
+
+
+      if (document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0] != undefined)
+      {
+        document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+        
+        // !samma färg = no kill :D
+        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+        {
+          document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+        }
+    }
+  }
+}
+
+// !Bli drottning när framme
+if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
+  if (color == "white") {
+    event.src = "https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png";
+    event.classList.replace("pawn", "queen");
+  }
+  else if (color == "black"){
+    event.src = "https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png";
+    event.classList.replace("pawn", "queen");
+  }
+}
+}
+
+var getBishopMoves = function(square, color) {
+getMoveIndex(square);
+
+if (whereNumberGlobal != undefined) {
+  if (color === "black") {
+    NewWhereNumberGlobal = 1;
+  }
+  else if (color === "white") {
+    NewWhereNumberGlobal = 8;
+  }
+
+  if (color === "black") {
+    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+      for (let i = 0; i < 8; i++) {
+          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+          NewWhereNumberGlobal++;
+      }
+    }
+      else return false;
+    }
+        
+  else if(color === "white")
+      {
+        if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+          if(eventIndexLetterGlobal == 0)
+          {
+            for (let i = 0; i < 8; i++) {
+              whereLetterGlobal = letters[i];
+              console.log(whereLetterGlobal + NewWhereNumberGlobal);
+              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+              NewWhereNumberGlobal--;
+            }
+          }
+          else if (eventIndexLetterGlobal == 7) 
+          {
+            for (let i = 0; i < 8; i++) {
+              whereLetterGlobal = letters[i];
+              console.log(whereLetterGlobal + NewWhereNumberGlobal);
+              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+              NewWhereNumberGlobal--;
+            }
+          }
+      }
+        else return false;
+    }
+  }
+}
+
+var getRookMoves = function(square, color) {
+getMoveIndex(square);
+
+if (whereNumberGlobal != undefined) {
+  if (color === "black") {
+    NewWhereNumberGlobal = 1;
+  }
+  else if (color === "white") {
+    NewWhereNumberGlobal = 8;
+  }
+
+  if (color === "black") {
+    // !NIIIIIIIIOM
+    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+      for (let i = 0; i < 8; i++) {
+        whereLetterGlobal = square.charAt(0);
+        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+        NewWhereNumberGlobal++;
+      }
+      
+      for (let i = 0; i < 8; i++) {
+        whereLetterGlobal = letters[i];
+        NewWhereNumberGlobal = square.charAt(1);
+        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+      }
+      document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+    }
+      else return false;
+    }
+        
+    else if(color === "white")
+    {
+      // !NIIIIIIIIOM but white
+        if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+          for (let i = 0; i < 8; i++) {
+            whereLetterGlobal = square.charAt(0);
+            document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+            NewWhereNumberGlobal--;
+            document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+
+          // !om samma färg = stanna
+          // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
+          //   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0].classList.contains("white")) {
+          //       break;
+          //     }
+          //   }
+          }
+          
+          for (let i = 0; i < 8; i++) {
+            whereLetterGlobal = letters[i];
+            NewWhereNumberGlobal = square.charAt(1);
+            document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+          }
+          document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+        }
+      else return false;
+    }
+  }
+}
+
+var getQueenMoves = function(square, color) {
+  getMoveIndex(square);
+
+if (whereNumberGlobal != undefined) {
+  if (color === "black") {
+    NewWhereNumberGlobal = 1;
+  }
+
+  else if (color === "white") {
+    NewWhereNumberGlobal = 8;
+  }
+
+  // !NIIIIIIIIOM
+  if (color === "black") {
+    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+      for (let i = 0; i < 8; i++) {
+        whereLetterGlobal = square.charAt(0);
+        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+        NewWhereNumberGlobal++;
+      }
+      
+      for (let i = 0; i < 8; i++) {
+        whereLetterGlobal = letters[i];
+        NewWhereNumberGlobal = square.charAt(1);
+        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+      }
+      document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+    }
+      else return false;
+    }
+        
+    // !NIIIIIIIIOM but white
+    else if(color === "white")
+    {
+        if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+          // !Framåt
+          for (let i = 0; i < 8; i++) {
+            whereLetterGlobal = square.charAt(0);
+            document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+            NewWhereNumberGlobal--;
+            document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+          }
+
+            // !Sidan
+          for (let i = 0; i < 8; i++) {
+            whereLetterGlobal = letters[i];
+            NewWhereNumberGlobal = square.charAt(1);
+            document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+          }
+
+          // !om samma färg = stanna
+          // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
+          //   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0].classList.contains("white")) {
+          //       break;
+          //     }
+          //   }
+
+          const whereLetter = square.charAt(0);
+          whereLetterGlobal = whereLetter
+      
+          function FunctionWhereLetter(letter) {
+            return letter >= whereLetter;
+          }
+      
+          let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
+
+          // !Snett
+        if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+            for (let i = 0; i < 8; i++) {
+              // letters[eventIndexLetterLocal];
+              whereLetterGlobal = letters[i];
+              console.log(document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0]);
+              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+            }
+            NewWhereNumberGlobal--;
+          }
+            
+          // !Ta bort availablePlaces där den är
+          document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+        }
+      }
+    }
+  }
+
+var getMoveIndex = function(square) {
+var where = square;
+
+if (where != undefined) {
+  // !Tar första och andra bokstaven/siffran i squaren som man är i
+  const whereLetter = where.charAt(0);
+  const whereNumber = where.charAt(1);
+  
+  whereLetterGlobal = whereLetter
+  whereNumberGlobal = whereNumber;
+
+  function FunctionWhereLetter(letter) {
+    return letter >= whereLetter;
+  }
+  
+  function FunctionWhereNumber(number) {
+    return number >= whereNumber;
+  }
+  
+  // !hittar indexen som bokstäverna är inom arrayen
+  let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
+  let eventIndexNumberLocal = numbers.findIndex(FunctionWhereNumber);
+  
+  eventIndexNumberGlobal = eventIndexNumberLocal;
+  eventIndexLetterGlobal = eventIndexLetterLocal;
+ }
+ else return false;
+}
+
+
+// !Bordet
 var pieceCheck = function (piece, checkClass) {
   if (piece.classList.contains(checkClass)) {
     piece.setAttribute('draggable', true);
@@ -569,4 +685,3 @@ var boardInfo = function (square) {
 
 LetterNumber();
 drawBoard();
-
