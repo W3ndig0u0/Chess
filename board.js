@@ -243,16 +243,16 @@ var moves = function(type, color, square, event){
         nextMoves = getRookMoves(square, color);
         break;
       // case 'knight':
-      // 	nextMoves = getKnightMoves(i, j, color, moves);
-      // 	break;
+      	// nextMoves = getKnightMoves(square, color);
+      	// break;
       // case 'bishop':
       //   nextMoves = getBishopMoves(square, color);
       // 	break;
       case 'queen':
         nextMoves = getQueenMoves(square, color);
         break;
-      // case 'king':
-      // 	nextMoves = getKnightMoves(i, j, color, moves);
+      case 'king':
+      	nextMoves = getKingMoves(square, color);
         break;
      default: 
        break;
@@ -463,6 +463,7 @@ if (whereNumberGlobal != undefined) {
             document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
             NewWhereNumberGlobal--;
             document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+          }
 
           // !om samma färg = stanna
           // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
@@ -470,7 +471,6 @@ if (whereNumberGlobal != undefined) {
           //       break;
           //     }
           //   }
-          }
           
           for (let i = 0; i < 8; i++) {
             whereLetterGlobal = letters[i];
@@ -483,6 +483,37 @@ if (whereNumberGlobal != undefined) {
     }
   }
 }
+
+
+var getKingMoves = function(square, color) {
+    getMoveIndex(square);
+
+    if (whereNumberGlobal != undefined) {
+      let whereLetter = square.charAt(0);
+      let KingWhereNumber = square.charAt(1);
+
+      let NewkingWhereNumber =  KingWhereNumber;
+      KingWhereNumber--;
+      NewkingWhereNumber++;
+
+      function FunctionWhereLetter(letter) {
+        return letter >= whereLetter;
+      }
+
+    let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
+
+      for (let y = -2; y < 1; y++) {
+        for (let i = -1; i < 2; i++) {
+          let kingWhereNumberLoop = KingWhereNumber - y;
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + kingWhereNumberLoop)[0] != undefined)
+          {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+          }
+        } 
+      }
+      document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+    }
+  }
 
 var getQueenMoves = function(square, color) {
   getMoveIndex(square);
@@ -555,7 +586,6 @@ if (whereNumberGlobal != undefined) {
             for (let i = 0; i < 8; i++) {
               // letters[eventIndexLetterLocal];
               whereLetterGlobal = letters[i];
-              console.log(document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0]);
               document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
             }
             NewWhereNumberGlobal--;
