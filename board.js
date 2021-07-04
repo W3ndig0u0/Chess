@@ -269,30 +269,34 @@ var getPawnMoves = function(moves, square, color, event) {
   let NewWhereNumberGlobal = whereNumberGlobal - moveNumber;
   
   // !kollar om den har rört sig eller inte
-if (eventIndexNumberGlobal == 1 && color === 'black' || color == "white" && eventIndexNumberGlobal == 6 ) {
+  if (eventIndexNumberGlobal == 1 && color === 'black' || color == "white" && eventIndexNumberGlobal == 6 ) {
+    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
+      if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] != undefined) {
+          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+      }
+
+      else {
+        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobalDouble)[0].classList.add("availablePlaces");
+        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+      }
+    }
+  }
+
+  else if( eventIndexNumberGlobal == 1 || eventIndexNumberGlobal == 2 || eventIndexNumberGlobal == 3 || eventIndexNumberGlobal == 4 || eventIndexNumberGlobal == 5 || eventIndexNumberGlobal == 6)
+  {
+    document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+  }
+
+  // !om någon framför, kan ej röra fram
   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
     if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] != undefined) {
         document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
     }
-    else {
-      document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobalDouble)[0].classList.add("availablePlaces");
-      document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-    }
+    else return false;
   }
-}
 
-else if( eventIndexNumberGlobal == 1 || eventIndexNumberGlobal == 2 || eventIndexNumberGlobal == 3 || eventIndexNumberGlobal == 4 || eventIndexNumberGlobal == 5 || eventIndexNumberGlobal == 6)
-{
-  document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-}
-
-// !om någon framför, kan ej röra fram
-if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-  if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] != undefined) {
-      document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
-    }
-  else return false;
-
+  if(document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0]){
+    // !kan ej döda sidan om fram e tom!!!!
     const whereLetter = square.charAt(0);
     whereLetterGlobal = whereLetter
 
@@ -300,31 +304,34 @@ if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0]
       return letter >= whereLetter;
     }
 
-    let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
-    
+    let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
+
+    console.log(document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0]);
+    console.log(document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0]);
+
     // !Sidan == KILLLL
-    if (eventIndexLetterLocal == 0) {
-      if (document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0] != undefined) {
-          document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+    if (eventIndexLetterGlobal == 0) {
+      if (document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0] != undefined) {
+          document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
 
         // !samma färg = no kill :D
-        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
         {
-          document.getElementsByClassName(letters[eventIndexLetterLocal + 1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+          document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
         }
-
+        
       }
     }
 
-    else if(eventIndexLetterLocal == 7){
-      if(document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
+    else if(eventIndexLetterGlobal == 7){
+      if(document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
       {
 
-          document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+          document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
         // !samma färg = no kill :D
-        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
         {
-          document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+          document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
         }
 
       }
@@ -332,42 +339,41 @@ if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0]
     
     else
     {
-      if(document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
-      
-      document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-      
-      // !samma färg = no kill :D
-      
-      if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
-      {
-        document.getElementsByClassName(letters[eventIndexLetterLocal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
-      }
-
-
-      if (document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0] != undefined)
-      {
-        document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-        
-        // !samma färg = no kill :D
-        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+        if(document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
         {
-          document.getElementsByClassName(letters[eventIndexLetterLocal+1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+            document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+            // !samma färg = no kill :D
+            if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+            {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+            }
+        }
+        
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0] != undefined)
+        {
+          document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
+          
+          // !samma färg = no kill :D
+          if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+          {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+          }
         }
     }
   }
-}
 
-// !Bli drottning när framme
-if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
-  if (color == "white") {
-    event.src = "https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png";
-    event.classList.replace("pawn", "queen");
+
+  // !Bli drottning när framme
+  if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
+    if (color == "white") {
+      event.src = "https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png";
+      event.classList.replace("pawn", "queen");
+    }
+    else if (color == "black"){
+      event.src = "https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png";
+      event.classList.replace("pawn", "queen");
+    }
   }
-  else if (color == "black"){
-    event.src = "https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png";
-    event.classList.replace("pawn", "queen");
-  }
-}
 }
 
 var getBishopMoves = function(square, color) {
