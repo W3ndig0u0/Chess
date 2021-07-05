@@ -517,13 +517,12 @@ var getKingMoves = function(square, color) {
         let kingWhereNumberLoop = KingWhereNumber - y;
         let kingWhereNumberLoopDown = KingWhereNumberDown + y;
       
-      // !höger
+        // !yeahhhhhh
       if (document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0] != undefined)
         {
           document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
         }
               
-        // !Vänster
       if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0] != undefined)
         {
           document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
