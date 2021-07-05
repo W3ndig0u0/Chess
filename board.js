@@ -242,12 +242,12 @@ var moves = function(type, color, square, event){
        case 'rook':
         nextMoves = getRookMoves(square, color);
         break;
-      // case 'knight':
-      	// nextMoves = getKnightMoves(square, color);
-      	// break;
-      // case 'bishop':
-      //   nextMoves = getBishopMoves(square, color);
-      // 	break;
+      case 'knight':
+      	nextMoves = getKnightMoves(square, color);
+      	break;
+      case 'bishop':
+        nextMoves = getBishopMoves(square, color);
+      	break;
       case 'queen':
         nextMoves = getQueenMoves(square, color);
         break;
@@ -377,51 +377,35 @@ var getPawnMoves = function(moves, square, color, event) {
 }
 
 var getBishopMoves = function(square, color) {
-getMoveIndex(square);
+  getMoveIndex(square);
+      if (whereNumberGlobal != undefined) {
+      let whereLetter = square.charAt(0);
+      let KingWhereNumber = square.charAt(1);
 
-if (whereNumberGlobal != undefined) {
-  if (color === "black") {
-    NewWhereNumberGlobal = 1;
-  }
-  else if (color === "white") {
-    NewWhereNumberGlobal = 8;
-  }
-
-  if (color === "black") {
-    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-      for (let i = 0; i < 8; i++) {
-          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-          NewWhereNumberGlobal++;
+      function FunctionWhereLetter(letter) {
+        return letter >= whereLetter;
       }
-    }
-      else return false;
-    }
+
+    let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
+
+      for (let y = -10; y < 10; y++) {
+          let kingWhereNumberLoop = KingWhereNumber - y;
+          // !höger
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0] != undefined)
+          {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+          }
+          
+          // !Vänster
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0] != undefined)
+          {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+          }
+      }
         
-  else if(color === "white")
-      {
-        if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-          if(eventIndexLetterGlobal == 0)
-          {
-            for (let i = 0; i < 8; i++) {
-              whereLetterGlobal = letters[i];
-              console.log(whereLetterGlobal + NewWhereNumberGlobal);
-              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-              NewWhereNumberGlobal--;
-            }
-          }
-          else if (eventIndexLetterGlobal == 7) 
-          {
-            for (let i = 0; i < 8; i++) {
-              whereLetterGlobal = letters[i];
-              console.log(whereLetterGlobal + NewWhereNumberGlobal);
-              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-              NewWhereNumberGlobal--;
-            }
-          }
-      }
-        else return false;
+      document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
     }
-  }
+
 }
 
 var getRookMoves = function(square, color) {
@@ -491,10 +475,7 @@ var getKingMoves = function(square, color) {
     if (whereNumberGlobal != undefined) {
       let whereLetter = square.charAt(0);
       let KingWhereNumber = square.charAt(1);
-
-      let NewkingWhereNumber =  KingWhereNumber;
       KingWhereNumber--;
-      NewkingWhereNumber++;
 
       function FunctionWhereLetter(letter) {
         return letter >= whereLetter;
@@ -514,6 +495,37 @@ var getKingMoves = function(square, color) {
       document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
     }
   }
+  
+  var getKnightMoves = function(square, color) {
+    getMoveIndex(square);
+
+    if (whereNumberGlobal != undefined) {
+      let whereLetter = square.charAt(0);
+      let KingWhereNumber = square.charAt(1);
+      // KingWhereNumber--;
+
+      function FunctionWhereLetter(letter) {
+        return letter >= whereLetter;
+      }
+
+    let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
+      for (let i = -2; i < 3; i++) {
+        let kingWhereNumberLoop = KingWhereNumber - i;
+
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + KingWhereNumber)[0] != undefined)
+          {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + KingWhereNumber)[0].classList.add("availablePlaces");
+            
+          }
+          
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + kingWhereNumberLoop)[0] != undefined)
+          {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+          }
+        }
+        document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+      }
+    }
 
 var getQueenMoves = function(square, color) {
   getMoveIndex(square);
@@ -565,78 +577,83 @@ if (whereNumberGlobal != undefined) {
             document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
           }
 
-          // !om samma färg = stanna
-          // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
-          //   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0].classList.contains("white")) {
-          //       break;
-          //     }
-          //   }
-
           const whereLetter = square.charAt(0);
           whereLetterGlobal = whereLetter
       
           function FunctionWhereLetter(letter) {
             return letter >= whereLetter;
           }
-      
-          let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
+        }
 
           // !Snett
-        if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-            for (let i = 0; i < 8; i++) {
-              // letters[eventIndexLetterLocal];
-              whereLetterGlobal = letters[i];
-              document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-            }
-            NewWhereNumberGlobal--;
+          let whereLetter = square.charAt(0);
+          let KingWhereNumber = square.charAt(1);
+    
+          function FunctionWhereLetter(letter) {
+            return letter >= whereLetter;
           }
-            
+    
+        let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
+    
+          for (let y = -10; y < 10; y++) {
+              let kingWhereNumberLoop = KingWhereNumber - y;
+              // !höger
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0] != undefined)
+              {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+              }
+              
+              // !Vänster
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0] != undefined)
+              {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+              }
+          }
           // !Ta bort availablePlaces där den är
           document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
         }
       }
     }
-  }
 
-var getMoveIndex = function(square) {
-var where = square;
+    var getMoveIndex = function(square) {
+    var where = square;
 
-if (where != undefined) {
-  // !Tar första och andra bokstaven/siffran i squaren som man är i
-  const whereLetter = where.charAt(0);
-  const whereNumber = where.charAt(1);
-  
-  whereLetterGlobal = whereLetter
-  whereNumberGlobal = whereNumber;
+    if (where != undefined) {
+      // !Tar första och andra bokstaven/siffran i squaren som man är i
+      const whereLetter = where.charAt(0);
+      const whereNumber = where.charAt(1);
+      
+      whereLetterGlobal = whereLetter
+      whereNumberGlobal = whereNumber;
 
-  function FunctionWhereLetter(letter) {
-    return letter >= whereLetter;
-  }
-  
-  function FunctionWhereNumber(number) {
-    return number >= whereNumber;
-  }
-  
-  // !hittar indexen som bokstäverna är inom arrayen
-  let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
-  let eventIndexNumberLocal = numbers.findIndex(FunctionWhereNumber);
-  
-  eventIndexNumberGlobal = eventIndexNumberLocal;
-  eventIndexLetterGlobal = eventIndexLetterLocal;
- }
- else return false;
-}
+      function FunctionWhereLetter(letter) {
+        return letter >= whereLetter;
+      }
+      
+      function FunctionWhereNumber(number) {
+        return number >= whereNumber;
+      }
+      
+      // !hittar indexen som bokstäverna är inom arrayen
+      let eventIndexLetterLocal = letters.findIndex(FunctionWhereLetter);
+      let eventIndexNumberLocal = numbers.findIndex(FunctionWhereNumber);
+      
+      eventIndexNumberGlobal = eventIndexNumberLocal;
+      eventIndexLetterGlobal = eventIndexLetterLocal;
+    }
+    else return false;
+    }
 
 
-// !Bordet
-var pieceCheck = function (piece, checkClass) {
-  if (piece.classList.contains(checkClass)) {
-    piece.setAttribute('draggable', true);
-  }
-  else {
-    piece.setAttribute('draggable', false);
-  }
-}
+    // !Bordet
+    var pieceCheck = function (piece, checkClass) {
+      if (piece.classList.contains(checkClass)) {
+        piece.setAttribute('draggable', true);
+      }
+      else {
+        piece.setAttribute('draggable', false);
+      }
+    }
 
 
 var LetterNumber = function () {
