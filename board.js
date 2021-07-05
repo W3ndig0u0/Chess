@@ -502,30 +502,56 @@ var getKingMoves = function(square, color) {
     if (whereNumberGlobal != undefined) {
       let whereLetter = square.charAt(0);
       let KingWhereNumber = square.charAt(1);
-      // KingWhereNumber--;
+      let KingWhereNumberDown = KingWhereNumber;
+      KingWhereNumberDown++;
+      KingWhereNumber--;
 
       function FunctionWhereLetter(letter) {
         return letter >= whereLetter;
       }
 
     let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
-      for (let i = -2; i < 3; i++) {
-        let kingWhereNumberLoop = KingWhereNumber - i;
 
-        if (document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + KingWhereNumber)[0] != undefined)
-          {
-            document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + KingWhereNumber)[0].classList.add("availablePlaces");
-            
-          }
-          
-        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + kingWhereNumberLoop)[0] != undefined)
-          {
-            document.getElementsByClassName(letters[eventIndexLetterGlobal] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+      for (let y = -2; y < 2; y++) 
+      {
+        let kingWhereNumberLoop = KingWhereNumber - y;
+        let kingWhereNumberLoopDown = KingWhereNumberDown + y;
+      
+      // !höger
+      if (document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0] != undefined)
+        {
+          document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+        }
+              
+        // !Vänster
+      if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0] != undefined)
+        {
+          document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+        }
+        
+      if (document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoopDown)[0] != undefined)
+        {
+          document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoopDown)[0].classList.add("availablePlaces");
+        }
+              
+      if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoopDown)[0] != undefined)
+        {
+          document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoopDown)[0].classList.add("availablePlaces");
+        }
+      }
+
+      for (let y = -2; y < 1; y++) {
+        for (let i = -1; i < 2; i++) {
+          let kingWhereNumberLoop = KingWhereNumber - y;
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + kingWhereNumberLoop)[0] != undefined)
+            {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal - i] + kingWhereNumberLoop)[0].classList.remove("availablePlaces");
+            }
           }
         }
-        document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
-      }
+      document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
     }
+  }
 
 var getQueenMoves = function(square, color) {
   getMoveIndex(square);
