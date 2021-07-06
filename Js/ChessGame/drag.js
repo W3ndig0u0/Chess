@@ -14,7 +14,7 @@ export function Drag(square)
   square.addEventListener("dragstart", dragStart);
   square.addEventListener("dragend", dragEnd);
 }
-
+  
 function dragStart(event) {
   if (event.target.classList.contains("placed") && !event.target.classList.contains("square")) {
     Moves(event.target.classList[2], event.target.classList[1], event.target.parentNode.classList[0], event.target);
