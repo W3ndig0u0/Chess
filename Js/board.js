@@ -225,154 +225,244 @@ var DropLogic = function (event) {
 }
 
 // !Movement
-var moves = function(type, color, square, event){ 
+var moves = function(type, color, square){ 
   switch(type) {
      case 'pawn':
-       if(color === 'black') {
-          var moves = [
-            [0, -1], [0, -2], [1, -1], [-1, -1]
-          ];
-        } else {
-          var moves = [
-            [0, 1], [0, 2], [1, 1], [-1, 1]
-          ];
-       }
-       nextMoves = getPawnMoves(moves, square, color, event);
+      getPawnMoves(square, color);
        break;
        case 'rook':
-        nextMoves = getRookMoves(square, color);
+        getRookMoves(square, color);
         break;
       case 'knight':
-      	nextMoves = getKnightMoves(square, color);
+      	getKnightMoves(square, color);
       	break;
       case 'bishop':
-        nextMoves = getBishopMoves(square, color);
+        getBishopMoves(square, color);
       	break;
       case 'queen':
-        nextMoves = getQueenMoves(square, color);
+        getQueenMoves(square, color);
         break;
       case 'king':
-      	nextMoves = getKingMoves(square, color);
+      	getKingMoves(square, color);
         break;
      default: 
        break;
     }
 }
 
-var getPawnMoves = function(moves, square, color, event) {
+
+function Promotion(event)
+{
+  if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
+    if (event.target.classList.contains("whitepawn")) {
+      event.target.src = "https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png";
+      event.target.classList.replace("pawn", "queen");
+    }
+    
+    else if (event.target.classList.contains("blackpawn")) {
+        event.target.src = "https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png";
+        event.target.classList.replace("pawn", "queen");
+    }
+  }
+}
+
+
+var getPawnMoves = function(square, color) {
   getMoveIndex(square);
-  
-  var moveNumber = moves[0][1];
-  var moveNumberDouble = moves[1][1];
-  
-  let NewWhereNumberGlobalDouble = whereNumberGlobal - moveNumberDouble;
-  let NewWhereNumberGlobal = whereNumberGlobal - moveNumber;
-  
-  // !kollar om den har rört sig eller inte
-  if (eventIndexNumberGlobal == 1 && color === 'black' || color == "white" && eventIndexNumberGlobal == 6 ) {
-    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-      if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] != undefined) {
-          document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
-      }
 
-      else {
-        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobalDouble)[0].classList.add("availablePlaces");
-        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-      }
-    }
-  }
-
-  else if( eventIndexNumberGlobal == 1 || eventIndexNumberGlobal == 2 || eventIndexNumberGlobal == 3 || eventIndexNumberGlobal == 4 || eventIndexNumberGlobal == 5 || eventIndexNumberGlobal == 6)
-  {
-    document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-  }
-
-  // !om någon framför, kan ej röra fram
-  if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0] != undefined) {
-    if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].children[0] != undefined) {
-        document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
-    }
-    else return false;
-  }
-
-  if(document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0]){
-    // !kan ej döda sidan om fram e tom!!!!
-    const whereLetter = square.charAt(0);
-    whereLetterGlobal = whereLetter
-
+  if (whereNumberGlobal != undefined) {
+    let whereLetter = square.charAt(0);
+    let PawnWhereNumber = square.charAt(1);
+    
     function FunctionWhereLetter(letter) {
       return letter >= whereLetter;
     }
-
+    
     let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
 
-    console.log(document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0]);
-    console.log(document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0]);
-
-    // !Sidan == KILLLL
-    if (eventIndexLetterGlobal == 0) {
-      if (document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0] != undefined) {
-          document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-
-        // !samma färg = no kill :D
-        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
-        {
-          document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+    if (color == "white") {
+      
+      // !om det är i start
+      if (PawnWhereNumber == 7) {
+        for (let i = 0; i < 3; i++) {
+          NewPawnNumber = PawnWhereNumber - i;
+          document.getElementsByClassName(letters[eventIndexLetterGlobal] + NewPawnNumber)[0].classList.add("availablePlaces");
         }
-        
-      }
-    }
-
-    else if(eventIndexLetterGlobal == 7){
-      if(document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
-      {
-
-          document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-        // !samma färg = no kill :D
-        if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
-        {
-          document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
-        }
-
-      }
-    }
-    
-    else
-    {
-        if(document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0] != undefined)
-        {
-            document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-            // !samma färg = no kill :D
-            if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
+        PawnWhereNumber--;
+        // !om fienden är diagonalt o du är i start
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0] != undefined) {
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0].classList.contains("black")) 
             {
-              document.getElementsByClassName(letters[eventIndexLetterGlobal-1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
+              document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].classList.add("availablePlaces");
             }
-        }
-        
-        if (document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0] != undefined)
-        {
-          document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
-          
-          // !samma färg = no kill :D
-          if(color == "white" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("white") || (color == "black" && document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].children[0].classList.contains("black")))
-          {
-            document.getElementsByClassName(letters[eventIndexLetterGlobal+1] + NewWhereNumberGlobal)[0].classList.remove("availablePlaces");
           }
         }
-    }
-  }
+        
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0] != undefined) {
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0].classList.contains("black")) 
+            {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].classList.add("availablePlaces");
+            }
+          }
+        }
+        
+        // !två steg framför
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0] != undefined) 
+        {
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0].classList.contains("white")) 
+          {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+            
+            PawnWhereNumber--;
+            document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+          }
+          else return false;
+        }
+        
+        // !ett steg framför
+        PawnWhereNumber--;
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0] != undefined) 
+        {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0].classList.contains("white")) 
+              {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+              }
+            else return false;
+        }
+      }
 
+      else
+        {
+          PawnWhereNumber--;
+        
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0] != undefined) {
+          document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.add("availablePlaces");
+            
+        // !kollar om fienden är i sidan
+      
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0] != undefined) {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0].classList.contains("black")) 
+              {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].classList.add("availablePlaces");
+              }
+            }
+          }
+              
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0] != undefined) {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0].classList.contains("black")) {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].classList.add("availablePlaces");
+              }
+            }
+          }
 
-  // !Bli drottning när framme
-  if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
-    if (color == "white") {
-      event.src = "https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png";
-      event.classList.replace("pawn", "queen");
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0] != undefined)
+        {
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0] != undefined)
+            {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0].classList.contains("black"))
+              {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+              }
+            }
+          }
+        }
+      }
     }
-    else if (color == "black"){
-      event.src = "https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png";
-      event.classList.replace("pawn", "queen");
+
+    // !svart
+      else {
+        if (PawnWhereNumber == 2) {
+          for (let i = -2; i < 0; i++) {
+            NewPawnNumber = PawnWhereNumber - i;
+            document.getElementsByClassName(letters[eventIndexLetterGlobal] + NewPawnNumber)[0].classList.add("availablePlaces");
+          }
+          
+          PawnWhereNumber++;
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0] != undefined) {
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0].classList.contains("white")) 
+            {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].classList.add("availablePlaces");
+            }
+          }
+        }
+          
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0] != undefined) {
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0].classList.contains("white")) {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].classList.add("availablePlaces");
+            }
+          }
+        }
+
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0] != undefined) 
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0] != undefined) 
+          {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0].classList.contains("white")) 
+            {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+              
+              PawnWhereNumber++;
+              document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+            }
+            else return false;
+          }
+          
+          PawnWhereNumber++;
+        if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0] != undefined) 
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0] != undefined) 
+          {
+                if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0].classList.contains("white")) 
+                {
+                  document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+                }
+              else return false;
+          }
+        }
+
+      else
+      {
+          PawnWhereNumber++;
+
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0] != undefined) {
+            document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.add("availablePlaces");
+            
+            // !kollar om fienden är framför
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0] != undefined) {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0].classList.contains("white")) 
+              {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].classList.add("availablePlaces");
+              }
+            }
+          }
+            
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0] != undefined) {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0] != undefined) {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].children[0].classList.contains("white")) {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0].classList.add("availablePlaces");
+              }
+            }
+          }
+            
+          if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0] != undefined)
+          {
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0] != undefined)
+            {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].children[0].classList.contains("white"))
+              {
+                document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.remove("availablePlaces");
+              }
+            }
+          }
+        }
+      }
     }
+    document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
   }
 }
 
