@@ -35,13 +35,13 @@ export var Moves = function(type, color, square){
 
 export function Promotion(event)
 {
-  if( eventIndexNumberGlobal == 0 || eventIndexNumberGlobal == 7){
+  if( eventIndexNumberGlobal == 0){
     if (event.target.classList.contains("whitepawn")) {
       event.target.src = "https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png";
       event.target.classList.replace("pawn", "queen");
     }
-    
-    else if (event.target.classList.contains("blackpawn")) {
+    else if(eventIndexNumberGlobal == 7)
+      if (event.target.classList.contains("blackpawn")) {
         event.target.src = "https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png";
         event.target.classList.replace("pawn", "queen");
     }
