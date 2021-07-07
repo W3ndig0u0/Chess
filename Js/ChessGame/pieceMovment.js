@@ -288,6 +288,7 @@ if (whereNumberGlobal != undefined) {
   if (color === "black") {
     NewWhereNumberGlobal = 1;
   }
+  
   else if (color === "white") {
     NewWhereNumberGlobal = 8;
   }
