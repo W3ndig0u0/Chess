@@ -1,6 +1,6 @@
-import { Moves, Promotion } from "./pieceMovment.js";
+import { Moves, CheckLooker, Promotion } from "./pieceMovment.js";
 import { board } from "./board.js";
-import {pieceCheck} from "./piece.js";
+// import {pieceCheck} from "./piece.js";
 
 var availablePlaces = new Boolean(true);
 var move1 = new Audio('Sound/move2.wav');
@@ -19,7 +19,7 @@ export function Drag(square)
   
 function dragStart(event) {
   if (event.target.classList.contains("placed") && !event.target.classList.contains("square")) {
-    Moves(event.target.classList[2], event.target.classList[1], event.target.parentNode.classList[0], event.target);
+    Moves(event.target.classList[2], event.target.classList[1], event.target.parentNode.classList[0]);
 
     event.dataTransfer.setData("text/plain", event.target.id);
     dragged = event.target;
@@ -78,6 +78,8 @@ function onDrop(event) {
   // console.log(statsArray);
   Promotion(event);
   DropLogic(event);
+  
+  CheckLooker(event.target.classList[2], event.target.classList[1], event.target.parentNode.classList[0], event.target);
 
   for (let i = 0; i < board.childNodes.length; i++) {
     board.childNodes[i].classList.remove("availablePlaces");
