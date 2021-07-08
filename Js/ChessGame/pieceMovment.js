@@ -370,26 +370,48 @@ getMoveIndex(square);
   if (whereNumberGlobal != undefined) {
     // !om kungen e i ordinarie plats
     if (type == "king" && document.getElementsByClassName("E8")[0].children[0].classList.contains("king") || type == "king" && document.getElementsByClassName("E8")[0].children[0].classList.contains("king")) {
+      let KingWhereNumber = square.charAt(1);
       
       // !och om rook är i hörnen
       if(document.getElementsByClassName("A8")[0].children[0].classList.contains("rook") || document.getElementsByClassName("H8")[0].children[0].classList.contains("rook")){
 
-        // if (type == "rook" && document.getElementsByClassName("A1")[0].children[0].classList.contains("rook") || type == "rook" && document.getElementsByClassName("H1")[0].children[0].classList.contains("rook"))
-        
-        console.log(document.getElementsByClassName("E8")[0].children[0]);
         // !kollar om det finns några mellan de två
-        let KingWhereNumber = square.charAt(1);
-
-          for (let y = -2; y < 1; y++) {
+          for (let y = 1; y < 4 ; y++) {
             if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + KingWhereNumber)[0] != undefined)
             {
-              document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + KingWhereNumber)[0].classList.add("availablePlaces");
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + KingWhereNumber)[0].children[0] == undefined)
+              {
+                if (document.getElementsByClassName(letters[eventIndexLetterGlobal - 3] + KingWhereNumber)[0] != undefined)
+                {
+                  document.getElementsByClassName(letters[eventIndexLetterGlobal - 3] + KingWhereNumber)[0].classList.add("availablePlaces");
+                  // CastleAble();
+                }
+              }
             }
-          } 
+          }
         }
         
+        
+        if (document.getElementsByClassName("A1")[0].children[0].classList.contains("rook") || document.getElementsByClassName("H1")[0].children[0].classList.contains("rook"))
+        {
+          for (let y = -2; y < 0 ; y++) {
+            console.log(letters[eventIndexLetterGlobal - y] + KingWhereNumber)
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + KingWhereNumber)[0] != undefined)
+            {
+              if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + KingWhereNumber)[0].children[0] == undefined)
+              {
+                if (document.getElementsByClassName(letters[eventIndexLetterGlobal - -2] + KingWhereNumber)[0] != undefined)
+                {
+                  document.getElementsByClassName(letters[eventIndexLetterGlobal - -2] + KingWhereNumber)[0].classList.add("availablePlaces");
+                  // CastleAble();
+                }
+              }
+            }
+          }
+        }
       }
     }
+    else return false;
   }
 
 
