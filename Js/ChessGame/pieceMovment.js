@@ -2,9 +2,9 @@ import { letters, numbers } from "./board.js";
 
 let eventIndexLetterGlobal;
 let eventIndexNumberGlobal;
-let whereLetterGlobal;
+export let whereLetterGlobal;
 let whereNumberGlobal;
-let NewWhereNumberGlobal ;
+export let NewWhereNumberGlobal ;
 
 // !Movement
 export var Moves = function(type, color, square){ 
@@ -71,6 +71,8 @@ var getPawnMoves = function(square, color) {
         NewPawnNumber = PawnWhereNumber - i;
         document.getElementsByClassName(letters[eventIndexLetterGlobal] + NewPawnNumber)[0].classList.add("availablePlaces");
       }
+      document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+      
       PawnWhereNumber--;
       // !om fienden är diagonalt o du är i start
       if (document.getElementsByClassName(letters[eventIndexLetterGlobal + 1] + PawnWhereNumber)[0] != undefined) {
@@ -114,7 +116,7 @@ var getPawnMoves = function(square, color) {
             }
           else return false;
       }
-      }
+    }
 
       else
         {
@@ -124,7 +126,6 @@ var getPawnMoves = function(square, color) {
           document.getElementsByClassName(letters[eventIndexLetterGlobal] + PawnWhereNumber)[0].classList.add("availablePlaces");
             
         // !kollar om fienden är i sidan
-      
           if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0] != undefined) {
             if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0] != undefined) {
               if (document.getElementsByClassName(letters[eventIndexLetterGlobal + -1] + PawnWhereNumber)[0].children[0].classList.contains("black")) 
@@ -300,6 +301,12 @@ if (whereNumberGlobal != undefined) {
         whereLetterGlobal = square.charAt(0);
         document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].classList.add("availablePlaces");
         NewWhereNumberGlobal++;
+        // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
+        //   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0].classList.contains("placed"))
+        //   {
+        //     break;
+        //   }
+        // }
       }
       
       for (let i = 0; i < 8; i++) {
@@ -322,13 +329,6 @@ if (whereNumberGlobal != undefined) {
             NewWhereNumberGlobal--;
             document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
           }
-
-          // !om samma färg = stanna
-          // if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0] != undefined) {
-          //   if (document.getElementsByClassName(whereLetterGlobal + NewWhereNumberGlobal)[0].childNodes[0].classList.contains("white")) {
-          //       break;
-          //     }
-          //   }
           
           for (let i = 0; i < 8; i++) {
             whereLetterGlobal = letters[i];
@@ -429,10 +429,10 @@ var getKingMoves = function(square, color) {
 var getQueenMoves = function(square, color) {
   getMoveIndex(square);
 
-if (whereNumberGlobal != undefined) {
-  if (color === "black") {
-    NewWhereNumberGlobal = 1;
-  }
+  if (whereNumberGlobal != undefined) {
+    if (color === "black") {
+      NewWhereNumberGlobal = 1;
+    }
 
   else if (color === "white") {
     NewWhereNumberGlobal = 8;
@@ -454,9 +454,34 @@ if (whereNumberGlobal != undefined) {
       }
       document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
     }
-      else return false;
-    }
-        
+        // !Snett
+          let whereLetter = square.charAt(0);
+          let KingWhereNumber = square.charAt(1);
+    
+          function FunctionWhereLetter(letter) {
+            return letter >= whereLetter;
+          }
+    
+        let eventIndexLetterGlobal = letters.findIndex(FunctionWhereLetter);
+    
+        for (let y = -10; y < 10; y++) {
+            let kingWhereNumberLoop = KingWhereNumber - y;
+            // !höger
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0] != undefined)
+            {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal + y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+            }
+            
+            // !Vänster
+            if (document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0] != undefined)
+            {
+              document.getElementsByClassName(letters[eventIndexLetterGlobal - y] + kingWhereNumberLoop)[0].classList.add("availablePlaces");
+            }
+        }
+        // !Ta bort availablePlaces där den är
+        document.getElementsByClassName(square)[0].classList.remove("availablePlaces");
+      }
+
     // !NIIIIIIIIOM but white
     else if(color === "white")
     {

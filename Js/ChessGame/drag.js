@@ -1,5 +1,7 @@
 import { Moves, Promotion } from "./pieceMovment.js";
 import { board } from "./board.js";
+import {pieceCheck} from "./piece.js";
+
 var availablePlaces = new Boolean(true);
 var move1 = new Audio('Sound/move2.wav');
 var move2 = new Audio('Sound/move3.wav');
@@ -74,8 +76,9 @@ function onDrop(event) {
   // var statsArray = ["Dragged: " + dragged.outerHTML, "where Now: " + event.target.outerHTML, "lastDragged: " + lastdragged.outerHTML, "Dragged Classes: " + dragged.classList, "where Now Classes: " + event.target.classList, "lastDragged Classes: " + lastdragged.classList];
 
   // console.log(statsArray);
-  DropLogic(event);
   Promotion(event);
+  DropLogic(event);
+
   for (let i = 0; i < board.childNodes.length; i++) {
     board.childNodes[i].classList.remove("availablePlaces");
   }

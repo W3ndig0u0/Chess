@@ -20,10 +20,10 @@ var drawBoard = function () {
       const square = document.createElement("div");
       const Piece = document.createElement("img");
       square.classList.add(letters[x] + numbers[y]);
+      square.classList.add("square");
       
       setNewBoard(Piece, x, y);
       pieceCheck(Piece, "placed");
-      square.classList.add("square");
 
       Drag(square);
 
@@ -37,7 +37,8 @@ var drawBoard = function () {
       square.appendChild(Piece);
       board.appendChild(square);
 
-      if (square.innerHTML.includes("false")) {
+      // !om bild e ensam DELETE
+      if (Piece.src.length == 0) {
         Piece.remove();
       }
 

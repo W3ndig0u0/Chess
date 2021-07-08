@@ -1,5 +1,4 @@
 import { Moves } from "./pieceMovment.js";
-
 const wikiLink = "https://upload.wikimedia.org/wikipedia/commons";
 
 //!Chess pieces
@@ -65,7 +64,7 @@ var setPiece = function (piece, color, type) {
   Moves(type, color, undefined, piece);
 };
 
-// !Bordet
+// !de kan röra sig
 export var pieceCheck = function (piece, checkClass) {
   if (piece.classList.contains(checkClass)) {
     piece.setAttribute("draggable", true);
